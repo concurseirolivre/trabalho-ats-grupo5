@@ -226,8 +226,9 @@
         }, delay);
     }
 
-    // --- MOTOR DO JOGO (Lógica da Simulação) ---
+    // --- MOTOR DO JOGO (Lógica Corrigida e Revisada) ---
     const story = {
+        // CENA 1: O INÍCIO
         "start": {
             text: "[06:05] CONEXÃO ESTABELECIDA COM POSTO DE COMANDO...\n\nO deslizamento acabou de acontecer. A repórter confirmou o caos local. Você é o Coordenador Médico.\n\nRecursos limitados. Vidas em risco.\n\nSua primeira decisão definirá toda a operação. Qual sua prioridade?",
             choices: [
@@ -235,28 +236,37 @@
                 { text: "B - Focar na Gestão (Posto de Comando)", target: "fase_2" }
             ]
         },
+
+        // ERRO DA CENA 1
         "erro_gestao": {
             text: "Você chega à Zona de Impacto. A cena é caótica. Você ajuda na triagem e salva 3 vidas diretamente.\n\nContudo, você fica 8 horas preso na operação, sem comunicação. Ninguém coordenou a avaliação dos abrigos.",
-            feedback: { type: "error", msg: "ERRO DE GESTÃO: O desafio é a ORGANIZAÇÃO. Ao focar na emergência (micro), você abdicou da gestão (macro) e não preveniu os surtos nos abrigos." },
+            feedback: { type: "error", msg: "ERRO DE GESTÃO: Ao focar na emergência (micro), você abdicou da gestão (macro)." },
             choices: [
-                { text: "Reiniciar Simulação", target: "fase_2" } // Atalho para não voltar tudo
+                { text: "Reiniciar Simulação (Voltar ao Início)", target: "start" }
             ]
         },
+
+        // CENA 2: RECURSOS (Se acertou a Cena 1)
         "fase_2": {
             text: "Decisão correta. Você permanece no Posto de Comando para ter a visão geral.\n\n[07:00] Chega o balanço de recursos:\n- 10 equipes médicas disponíveis.\n- Emergência: Múltiplos feridos na lama.\n- Prevenção: 200 desalojados em abrigos precários.\n\nComo você aloca sua equipe?",
-            feedback: { type: "success", msg: "ACERTO: O papel do coordenador é gerenciar recursos e articular frentes." },
+            feedback: { type: "success", msg: "ACERTO: O papel do coordenador é gerenciar recursos." },
             choices: [
                 { text: "A - 100% das equipes para a Zona de Impacto (Foco nos feridos)", target: "erro_prevencao" },
                 { text: "B - 70% Emergência / 30% Avaliação dos Abrigos", target: "fase_3" }
             ]
         },
+
+        // ERRO DA CENA 2
         "erro_prevencao": {
             text: "[18:00] 12 horas se passam.\n\nO atendimento aos feridos foi ótimo. Mas um rádio desesperado chega do Abrigo 1: \"Doutor, surto de vômito e diarreia aqui. Saneamento colapsou.\"",
-            feedback: { type: "error", msg: "FALHA NA PREVENÇÃO: Você ignorou o 'Desafio' do trabalho (prevenção de agravos secundários). Agora você tem uma epidemia de Hepatite A/Cólera competindo com o desastre." },
+            feedback: { type: "error", msg: "FALHA NA PREVENÇÃO: Você ignorou o 'Desafio' do trabalho (prevenção de agravos secundários)." },
             choices: [
-                { text: "Tentar Novamente", target: "fase_2" }
+                { text: "Tentar este passo novamente", target: "fase_2" },
+                { text: "Reiniciar do Zero", target: "start" }
             ]
         },
+
+        // CENA 3: SAÚDE PÚBLICA (Se acertou a Cena 2)
         "fase_3": {
             text: "[10:00] A equipe de avaliação (30%) retorna com ALERTA VERMELHO:\n\n1. Abrigo Escola: Água parada e lama. Risco IMINENTE de Leptospirose.\n2. Abrigo Ginásio: Superlotação e tosse. Risco de Surto Respiratório.\n\nQual sua prioridade de Saúde Pública?",
             feedback: { type: "success", msg: "ACERTO: Dividir a equipe permitiu detectar os riscos antes que virassem surtos." },
@@ -266,31 +276,41 @@
                 { text: "C - Atacar a Causa Raiz (Articulação Intersetorial)", target: "fase_4" }
             ]
         },
+
+        // ERRO DA CENA 3 (Serve para A e B)
         "erro_clinico": {
             text: "Você envia insumos médicos. Mas a lama continua lá (Lepto) e a superlotação continua lá (Respiratório).\n\nVocê está tratando o sintoma, não a causa.",
-            feedback: { type: "error", msg: "ERRO DE VISÃO: Ação clínica sem mudança de infraestrutura é inútil. Você precisa da Defesa Civil para resolver a água e o espaço." },
+            feedback: { type: "error", msg: "ERRO DE VISÃO: Ação clínica sem mudança de infraestrutura é inútil aqui." },
             choices: [
-                { text: "Repensar Estratégia", target: "fase_3" }
+                { text: "Tentar este passo novamente", target: "fase_3" },
+                { text: "Reiniciar do Zero", target: "start" }
             ]
         },
+
+        // CENA 4: COMUNICAÇÃO (Se acertou a Cena 3)
         "fase_4": {
             text: "[11:00] Você tenta contatar a Defesa Civil para pedir água potável e reorganização do espaço.\n\nO rádio está mudo. \"Dificuldades de comunicação\", como previsto no cenário.\n\nO que você faz?",
-            feedback: { type: "success", msg: "ACERTO: Você identificou que é um problema de infraestrutura (intersetorial), não apenas médico." },
+            feedback: { type: "success", msg: "ACERTO: Você identificou que é um problema de infraestrutura (intersetorial)." },
             choices: [
                 { text: "A - Continuar tentando pelos canais oficiais (Protocolo)", target: "erro_burocracia" },
                 { text: "B - Ir fisicamente ao QG da Defesa Civil (Pró-atividade)", target: "vitoria" }
             ]
         },
+
+        // ERRO DA CENA 4
         "erro_burocracia": {
             text: "Você perde 3 horas tentando usar o rádio. Ninguém responde. A janela de oportunidade se fecha e os primeiros casos de febre aparecem.",
             feedback: { type: "error", msg: "FALHA DE ARTICULAÇÃO: Em desastres, a burocracia colapsa. Esperar é uma decisão errada." },
             choices: [
-                { text: "Tentar Novamente", target: "fase_4" }
+                { text: "Tentar este passo novamente", target: "fase_4" },
+                { text: "Reiniciar do Zero", target: "start" }
             ]
         },
+
+        // TELA FINAL (VITÓRIA)
         "vitoria": {
             text: "[11:30] Você vai pessoalmente ao QG. O Comandante da Defesa Civil entende a gravidade.\n\nPLANO CONJUNTO ATIVADO:\n1. Defesa Civil envia caminhão-pipa (Fim do risco Lepto).\n2. Defesa Civil abre anexo do ginásio (Fim do risco Respiratório).\n3. Médicos aplicam profilaxia e isolamento.\n\nCrise Gerenciada.",
-            feedback: { type: "success", msg: "MISSÃO CUMPRIDA: Você resolveu o desafio do Grupo 5 unindo Emergência, Prevenção e Articulação." },
+            feedback: { type: "success", msg: "MISSÃO CUMPRIDA: Você resolveu o desafio do Grupo 5." },
             choices: [
                 { text: "Reiniciar Apresentação", target: "start" }
             ]
