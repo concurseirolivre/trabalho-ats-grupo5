@@ -41,15 +41,15 @@
             filter: brightness(0.3) contrast(1.2) blur(2px);
         }
 
-        /* --- EFEITOS VISUAIS DE DESASTRE (NOVO) --- */
+        /* EFEITOS DE DESASTRE */
         #disaster-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Deixa clicar através */
-            z-index: 900; /* Atrás do texto, na frente do fundo */
+            pointer-events: none;
+            z-index: 900;
             display: none;
         }
 
@@ -70,15 +70,11 @@
             top: -50px;
         }
 
-        /* Animação da Tela Tremendo */
         .shake-screen {
             animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite;
         }
 
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
-        }
-
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -86,23 +82,78 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* --- 1. TELA DE PRÓLOGO --- */
+
+        /* --- 1. TELA DE ABERTURA (AGORA A PRIMEIRA) --- */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: flex; /* Visível por padrão */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #intro-content h1 {
+            color: #ff3d00;
+            font-size: 4em;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255, 61, 0, 0.8);
+            animation: pulse 1.5s infinite;
+            letter-spacing: 5px;
+        }
+
+        #intro-content h2 {
+            color: #fff;
+            font-weight: normal;
+            margin-top: 10px;
+            font-size: 1.5em;
+        }
+
+        #btn-start-intro {
+            background: transparent;
+            border: 3px solid #ff3d00;
+            color: #ff3d00;
+            padding: 20px 50px;
+            font-size: 1.8em;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 50px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            animation: borderPulse 2s infinite;
+        }
+        #btn-start-intro:hover {
+            background-color: #ff3d00;
+            color: #000;
+            box-shadow: 0 0 30px #ff3d00;
+        }
+
+
+        /* --- 2. TELA DE PRÓLOGO --- */
         #prologue-container {
             width: 90%;
             max-width: 900px;
-            background-color: rgba(20, 20, 25, 0.95);
+            background-color: rgba(20, 20, 25, 0.95); /* Cor Neutra Escura */
             border: 1px solid #444;
             border-top: 5px solid #2196F3;
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-            display: flex;
+            display: none; /* Começa oculta */
             flex-direction: column;
             align-items: center;
             text-align: center;
             z-index: 1000;
             animation: fadeIn 1s;
-            position: relative; /* Para o tremor funcionar */
+            position: relative;
         }
 
         #prologue-title {
@@ -147,68 +198,13 @@
         .btn-prologue:hover { background: #2196F3; color: white; }
 
 
-        /* --- 2. TELA DE ABERTURA/ALERTA --- */
-        #intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            z-index: 2000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            opacity: 0;
-        }
-
-        #intro-content h1 {
-            color: #ff3d00;
-            font-size: 4em;
-            margin-bottom: 0;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(255, 61, 0, 0.8);
-            animation: pulse 1.5s infinite;
-            letter-spacing: 5px;
-        }
-
-        #intro-content h2 {
-            color: #fff;
-            font-weight: normal;
-            margin-top: 10px;
-            font-size: 1.5em;
-        }
-
-        #btn-start-simulation {
-            background: transparent;
-            border: 3px solid #ff3d00;
-            color: #ff3d00;
-            padding: 20px 50px;
-            font-size: 1.8em;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 50px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            animation: borderPulse 2s infinite;
-        }
-        #btn-start-simulation:hover {
-            background-color: #ff3d00;
-            color: #000;
-            box-shadow: 0 0 30px #ff3d00;
-        }
-
-
         /* --- 3. TELA DO JOGO --- */
         #game-container {
             width: 80%;
             max-width: 800px;
-            background-color: rgba(20, 20, 20, 0.95);
+            background-color: rgba(20, 20, 20, 0.95); /* Cor Neutra Escura */
             border: 1px solid #444;
-            border-left: 5px solid #d32f2f;
+            border-left: 5px solid #d32f2f; /* Detalhe vermelho lateral */
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
@@ -273,12 +269,24 @@
 </head>
 <body>
 
-    <div class="background-fixed bg-prologue" id="main-bg"></div>
+    <div class="background-fixed bg-game" id="main-bg"></div>
     
     <div id="disaster-layer"></div>
 
     <audio id="audio-prologue" src="narracao_prologo.mp3" preload="auto"></audio>
     <audio id="audio-game" src="audio.mp3" preload="auto"></audio>
+
+
+    <div id="intro-screen">
+        <div id="intro-content">
+            <h1>ATENÇÃO</h1>
+            <h2>SITUAÇÃO DE DESASTRE EM ANDAMENTO</h2>
+            <h2>AÇÃO IMEDIATA NECESSÁRIA</h2>
+            
+            <button id="btn-start-intro">INICIAR SIMULAÇÃO</button>
+        </div>
+    </div>
+
 
     <div id="prologue-container">
         <div id="prologue-title">INTRODUÇÃO TÉCNICA</div>
@@ -296,15 +304,6 @@
         </div>
     </div>
 
-    <div id="intro-screen">
-        <div id="intro-content">
-            <h1>ATENÇÃO</h1>
-            <h2>SITUAÇÃO DE DESASTRE EM ANDAMENTO</h2>
-            <h2>AÇÃO IMEDIATA NECESSÁRIA</h2>
-            
-            <button id="btn-start-simulation">INICIAR OPERAÇÃO</button>
-        </div>
-    </div>
 
     <div id="game-container">
         <div class="header">
@@ -323,8 +322,8 @@
 
 <script>
     // --- VARIÁVEIS GERAIS ---
-    const prologueContainer = document.getElementById('prologue-container');
     const introScreen = document.getElementById('intro-screen');
+    const prologueContainer = document.getElementById('prologue-container');
     const gameContainer = document.getElementById('game-container');
     const mainBg = document.getElementById('main-bg');
     const disasterLayer = document.getElementById('disaster-layer');
@@ -337,90 +336,97 @@
     function startDisasterEffect() {
         disasterLayer.style.display = 'block';
         prologueContainer.classList.add('shake-screen');
-        
-        // Cria pedras/poeira a cada 200ms
         disasterInterval = setInterval(() => {
             const debris = document.createElement('div');
             const isRock = Math.random() > 0.5;
             debris.className = isRock ? 'rock' : 'dust';
-            
-            // Posição aleatória
             debris.style.left = Math.random() * 100 + 'vw';
-            
-            // Tamanho aleatório
             const size = Math.random() * (isRock ? 30 : 10) + 10;
             debris.style.width = size + 'px';
             debris.style.height = size + 'px';
-            
-            // Velocidade aleatória
             debris.style.animation = `fall ${Math.random() * 1 + 0.5}s linear`;
-
             disasterLayer.appendChild(debris);
-
-            // Remove do DOM quando a animação acaba
-            setTimeout(() => {
-                debris.remove();
-            }, 1500);
+            setTimeout(() => { debris.remove(); }, 1500);
         }, 100);
     }
 
     function stopDisasterEffect() {
         clearInterval(disasterInterval);
-        disasterLayer.innerHTML = ''; // Limpa destroços
+        disasterLayer.innerHTML = '';
         disasterLayer.style.display = 'none';
         prologueContainer.classList.remove('shake-screen');
     }
 
 
-    // --- 1. LÓGICA DO PRÓLOGO ---
+    // --- 1. TRANSIÇÃO INICIAL (ATENÇÃO -> PRÓLOGO) ---
+    document.getElementById('btn-start-intro').addEventListener('click', function() {
+        // Tenta iniciar o áudio do primeiro slide do prólogo aqui
+        // Isso "desbloqueia" o áudio no navegador
+        if(prologueData[0].audio) {
+            changeAudioTrack(prologueData[0].audio);
+        }
+
+        // Animação de saída
+        introScreen.style.transition = "opacity 1s";
+        introScreen.style.opacity = "0";
+        
+        setTimeout(() => {
+            introScreen.style.display = "none";
+            mainBg.className = "background-fixed bg-prologue"; // Muda filtro do fundo
+            updatePrologue(); // Renderiza o prólogo
+            prologueContainer.style.display = "flex";
+        }, 1000);
+    });
+
+
+    // --- 2. LÓGICA DO PRÓLOGO ---
     const prologueData = [
         {
             title: "INÍCIO",
-            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta do sistema de saúde. E, nesse contexto, o médico assume papéis que vão muito além do consultório. Ele precisa entender fisiologia, toxicologia, epidemiologia e, principalmente, como priorizar vidas quando não há recursos para todos. É aqui que entram conceitos como triagem, manejo inicial das vias aéreas, controle de hemorragias e tomada de decisão rápida.\"",
+            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio ou uma enchente — o caos domina os primeiros minutos.\n\nMas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre.\"",
             img: "https://www.pragmatismopolitico.com.br/wp-content/uploads/2018/05/acidente-cuba-e1527030296940.jpg",
             audio: "audio1.mp3",
-            hasEffect: true // ATIVA O EFEITO NESTE SLIDE
+            hasEffect: true 
         },
         {
             title: "O PAPEL DO MÉDICO",
-            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta.\n\nO médico precisa entender fisiologia, toxicologia e epidemiologia. É aqui que entram conceitos como triagem e manejo de vias aéreas.\"",
+            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta.\n\nO médico precisa entender fisiologia, toxicologia e epidemiologia. É aqui que entram conceitos como triagem, manejo de vias aéreas e tomada de decisão rápida quando não há recursos para todos.\"",
             img: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=1920&q=80",
             audio: "audio2.mp3"
         },
         {
             title: "TRIAGEM (MÉTODO START)",
-            text: "\"A triagem é o coração da resposta médica. É nela que o médico define quem precisa de intervenção imediata, quem pode esperar e quem, infelizmente, não tem chance real de sobrevivência dado o cenário. \n\nO método START baseia-se em:\n• Respiração – Se a vítima não respira após reposicionamento das vias aéreas, é classificada como preta. Se respira >30 incursões por minuto, é vermelha.\n• Perfusão – Tempo de enchimento capilar >2 segundos sugere choque hipovolêmico pela perda aguda de volume.\n• Estado mental – Incapacidade de seguir comandos indica possível hipóxia ou perfusão cerebral inadequada.\"",
+            text: "\"A triagem é o coração da resposta médica. É nela que o médico define quem precisa de intervenção imediata.\n\nO método START baseia-se em:\n• Respiração (>30rpm = Vermelho)\n• Perfusão (>2s = Choque)\n• Estado mental (Não obedece comandos = Hipóxia)\"",
             img: "https://images.unsplash.com/photo-1516574187841-69301976e49e?auto=format&fit=crop&w=1920&q=80",
             audio: "audio3.mp3"
         },
         {
             title: "SITUAÇÕES SIMPLES",
-            text: "\"Mesmo nos desastres, a maior parte das demandas médicas são simples: ferimentos leves, crises de ansiedade, desidratação, hipoglicemia.\n\nO médico atua como estabilizador: hidratação oral, suturas, analgésicos e controle de hipertensão por estresse em vulneráveis, como gestantes e crianças.\"",
+            text: "\"A maioria das demandas são simples: ferimentos leves, ansiedade, desidratação.\n\nO médico atua como estabilizador: hidratação oral, suturas, analgésicos e controle de hipertensão por estresse em vulneráveis.\"",
             img: "https://www.saude.sp.gov.br/resources/hospital-leonor-mendes-de-barros/acesso-rapido/primeiros-socorros-em-caso-de-incendio.jpg",
             audio: "audio4.mp3"
         },
         {
             title: "ALTA COMPLEXIDADE",
-            text: "\"Em cenários de desastre, o médico enfrenta quadros críticos. Em incêndios, por exemplo, a prioridade é tratar hipoxemia e intoxicação por monóxido de carbono — que compete com o O₂ pela hemoglobina, causando hipóxia tecidual..\nEm deslizamentos: Síndrome do Esmagamento (liberação de mioglobina e potássio, risco renal e arritmias). \n\nEm acidentes químicos, a conduta envolve descontaminação, neutralização e uso de antídotos específicos, como atropina e pralidoxima nos organofosforados.\n\nDecisões baseadas em fisiologia e protocolos.\"",
+            text: "\"Em incêndios: Intoxicação por monóxido de carbono.\nEm deslizamentos: Síndrome do Esmagamento (liberação de mioglobina e potássio, risco renal e arritmias).\n\nDecisões baseadas em fisiologia e protocolos.\"",
             img: "https://ogimg.infoglobo.com.br/in/23946251-8e9-d10/FT1086A/GettyImages-56441651.jpg",
             audio: "audio5.mp3"
         },
         {
             title: "LOGÍSTICA E LIDERANÇA",
-            text: "\"O médico também coordena equipes, solicita apoio, organiza fluxos de evacuação e adapta o cuidado conforme os recursos disponíveis. \n\nÉ ele quem conversa com bombeiros, defesa civil, enfermagem e motoristas de resgate para garantir que ninguém fique sem assistência.\n\nNo abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação e controle da água.\"",
+            text: "\"O médico coordena fluxos e conversa com bombeiros e defesa civil.\n\nNo abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação e controle da água.\"",
             img: "https://cdn.folhape.com.br/img/c/1200/900/dn_arquivo/2020/01/medico1.jpg",
             audio: "audio6.mp3"
         },
         {
             title: "A ESSÊNCIA",
-            text: "\"No fim, atuar em um desastre é equilibrar ciência, humanidade e estratégia.\n\nA medicina nesses cenários não é apenas técnica; exige também coragem e organização quando tudo ao redor parece destruido.\"",
+            text: "\"No fim, atuar em um desastre é equilibrar ciência, humanidade e estratégia.\n\nA medicina nesses cenários não é apenas técnica; exige também coragem e organização quando tudo ao redor parece destruído.\"",
             img: "https://blog.unyleyamed.com.br/wp-content/uploads/2023/09/shutterstock_661890763-scaled.webp",
             audio: "audio7.mp3"
         }
     ];
 
     let currentPrologueIndex = 0;
-    let isFirstInteraction = true;
 
     function updatePrologue() {
         const data = prologueData[currentPrologueIndex];
@@ -440,7 +446,7 @@
         
         const nextBtn = document.getElementById('btn-next-prologue');
         if (currentPrologueIndex === prologueData.length - 1) {
-            nextBtn.innerText = "IR PARA AÇÃO ⚠";
+            nextBtn.innerText = "IR PARA SIMULAÇÃO ⚠";
             nextBtn.style.borderColor = "#ff3d00";
             nextBtn.style.color = "#ff3d00";
         } else {
@@ -448,50 +454,37 @@
             nextBtn.style.borderColor = "#2196F3";
             nextBtn.style.color = "#2196F3";
         }
-
-        // Troca de Áudio
-        if (!isFirstInteraction && data.audio) {
-            changeAudioTrack(data.audio);
-        }
     }
 
     function changeAudioTrack(sourceUrl) {
-        audioPrologue.pause();
         audioPrologue.src = sourceUrl;
         audioPrologue.load();
-        audioPrologue.play().catch(e => console.log("Autoplay block"));
+        audioPrologue.play().catch(e => console.log("Audio auto-play blocked (ok if first load)"));
     }
 
     document.getElementById('btn-next-prologue').addEventListener('click', () => {
-        if(isFirstInteraction) {
-            isFirstInteraction = false;
+        if (currentPrologueIndex < prologueData.length - 1) {
+            currentPrologueIndex++;
             if(prologueData[currentPrologueIndex].audio) {
                 changeAudioTrack(prologueData[currentPrologueIndex].audio);
             }
-        }
-
-        if (currentPrologueIndex < prologueData.length - 1) {
-            currentPrologueIndex++;
             updatePrologue();
         } else {
-            stopDisasterEffect();
-            showIntroScreen();
+            startTheGame(); // FIM DO PRÓLOGO -> VAI PARA O JOGO
         }
     });
 
     document.getElementById('btn-prev-prologue').addEventListener('click', () => {
         if (currentPrologueIndex > 0) {
             currentPrologueIndex--;
+            if(prologueData[currentPrologueIndex].audio) {
+                changeAudioTrack(prologueData[currentPrologueIndex].audio);
+            }
             updatePrologue();
         }
     });
 
     function togglePrologueAudio() {
-        if (isFirstInteraction) {
-            isFirstInteraction = false;
-            changeAudioTrack(prologueData[currentPrologueIndex].audio);
-            return;
-        }
         if (audioPrologue.paused) {
             audioPrologue.play();
             document.getElementById('audio-status').innerText = "🔊 Tocando...";
@@ -501,40 +494,28 @@
         }
     }
 
-    // --- 2. TRANSIÇÃO PARA TELA DE ALERTA ---
-    function showIntroScreen() {
+
+    // --- 3. TRANSIÇÃO PARA O JOGO ---
+    function startTheGame() {
+        // Para áudio do prólogo
         audioPrologue.pause();
-        
-        // ATENÇÃO: Áudio do jogo toca assim que a tela de alerta aparece
-        audioGame.currentTime = 0;
-        audioGame.play().catch(e => console.error("Audio game auto-play:", e));
+        stopDisasterEffect();
+
+        // Inicia áudio do jogo
+        audioGame.play().catch(e => console.log("Game audio:", e));
 
         prologueContainer.style.display = 'none';
         mainBg.style.backgroundImage = "url('img1.jpg')";
-        mainBg.className = "background-fixed bg-game";
+        mainBg.className = "background-fixed bg-game"; // Volta filtro escuro/vermelho
 
-        introScreen.style.display = 'flex';
+        gameContainer.style.display = 'flex';
         setTimeout(() => {
-            introScreen.style.opacity = '1';
-        }, 50);
+            gameContainer.style.opacity = '1';
+            gameContainer.style.animation = 'fadeIn 1s ease-out';
+            goTo('start');
+        }, 100);
     }
 
-    // --- 3. TRANSIÇÃO PARA O JOGO ---
-    document.getElementById('btn-start-simulation').addEventListener('click', () => {
-        introScreen.style.transition = "opacity 1s";
-        introScreen.style.opacity = '0';
-
-        setTimeout(() => {
-            introScreen.style.display = 'none';
-            gameContainer.style.display = 'flex';
-            
-            setTimeout(() => {
-                gameContainer.style.opacity = '1';
-                gameContainer.style.animation = 'fadeIn 1s ease-out';
-                goTo('start');
-            }, 100);
-        }, 1000);
-    });
 
     // --- 4. MOTOR DO JOGO ---
     const story = {
@@ -680,8 +661,6 @@
             choicesContainer.style.opacity = "1";
         }, 100);
     }
-
-    updatePrologue();
 </script>
 </body>
 </html>
