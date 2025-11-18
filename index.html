@@ -83,77 +83,22 @@
         }
 
 
-        /* --- 1. TELA DE ABERTURA (AGORA A PRIMEIRA) --- */
-        #intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            z-index: 2000;
-            display: flex; /* Visível por padrão */
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        #intro-content h1 {
-            color: #ff3d00;
-            font-size: 4em;
-            margin-bottom: 0;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(255, 61, 0, 0.8);
-            animation: pulse 1.5s infinite;
-            letter-spacing: 5px;
-        }
-
-        #intro-content h2 {
-            color: #fff;
-            font-weight: normal;
-            margin-top: 10px;
-            font-size: 1.5em;
-        }
-
-        #btn-start-intro {
-            background: transparent;
-            border: 3px solid #ff3d00;
-            color: #ff3d00;
-            padding: 20px 50px;
-            font-size: 1.8em;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 50px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            animation: borderPulse 2s infinite;
-        }
-        #btn-start-intro:hover {
-            background-color: #ff3d00;
-            color: #000;
-            box-shadow: 0 0 30px #ff3d00;
-        }
-
-
-        /* --- 2. TELA DE PRÓLOGO --- */
+        /* --- 1. TELA DE PRÓLOGO (PRIMEIRA) --- */
         #prologue-container {
             width: 90%;
             max-width: 900px;
-            background-color: rgba(20, 20, 25, 0.95); /* Cor Neutra Escura */
+            background-color: rgba(20, 20, 25, 0.95);
             border: 1px solid #444;
             border-top: 5px solid #2196F3;
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-            display: none; /* Começa oculta */
+            display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             z-index: 1000;
             animation: fadeIn 1s;
-            position: relative;
         }
 
         #prologue-title {
@@ -198,13 +143,68 @@
         .btn-prologue:hover { background: #2196F3; color: white; }
 
 
+        /* --- 2. TELA DE ABERTURA/ALERTA (AGORA É A SEGUNDA) --- */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none; /* Começa escondida */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+        }
+
+        #intro-content h1 {
+            color: #ff3d00;
+            font-size: 4em;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255, 61, 0, 0.8);
+            animation: pulse 1.5s infinite;
+            letter-spacing: 5px;
+        }
+
+        #intro-content h2 {
+            color: #fff;
+            font-weight: normal;
+            margin-top: 10px;
+            font-size: 1.5em;
+        }
+
+        #btn-start-simulation {
+            background: transparent;
+            border: 3px solid #ff3d00;
+            color: #ff3d00;
+            padding: 20px 50px;
+            font-size: 1.8em;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 50px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            animation: borderPulse 2s infinite;
+        }
+        #btn-start-simulation:hover {
+            background-color: #ff3d00;
+            color: #000;
+            box-shadow: 0 0 30px #ff3d00;
+        }
+
+
         /* --- 3. TELA DO JOGO --- */
         #game-container {
             width: 80%;
             max-width: 800px;
-            background-color: rgba(20, 20, 20, 0.95); /* Cor Neutra Escura */
+            background-color: rgba(20, 20, 20, 0.95); /* Cor Neutra */
             border: 1px solid #444;
-            border-left: 5px solid #d32f2f; /* Detalhe vermelho lateral */
+            border-left: 5px solid #d32f2f;
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
@@ -269,24 +269,12 @@
 </head>
 <body>
 
-    <div class="background-fixed bg-game" id="main-bg"></div>
+    <div class="background-fixed bg-prologue" id="main-bg"></div>
     
     <div id="disaster-layer"></div>
 
     <audio id="audio-prologue" src="narracao_prologo.mp3" preload="auto"></audio>
     <audio id="audio-game" src="audio.mp3" preload="auto"></audio>
-
-
-    <div id="intro-screen">
-        <div id="intro-content">
-            <h1>ATENÇÃO</h1>
-            <h2>SITUAÇÃO DE DESASTRE EM ANDAMENTO</h2>
-            <h2>AÇÃO IMEDIATA NECESSÁRIA</h2>
-            
-            <button id="btn-start-intro">INICIAR SIMULAÇÃO</button>
-        </div>
-    </div>
-
 
     <div id="prologue-container">
         <div id="prologue-title">INTRODUÇÃO TÉCNICA</div>
@@ -304,6 +292,15 @@
         </div>
     </div>
 
+    <div id="intro-screen">
+        <div id="intro-content">
+            <h1>ATENÇÃO</h1>
+            <h2>SITUAÇÃO DE DESASTRE EM ANDAMENTO</h2>
+            <h2>AÇÃO IMEDIATA NECESSÁRIA</h2>
+            
+            <button id="btn-start-simulation">INICIAR OPERAÇÃO</button>
+        </div>
+    </div>
 
     <div id="game-container">
         <div class="header">
@@ -322,8 +319,8 @@
 
 <script>
     // --- VARIÁVEIS GERAIS ---
-    const introScreen = document.getElementById('intro-screen');
     const prologueContainer = document.getElementById('prologue-container');
+    const introScreen = document.getElementById('intro-screen');
     const gameContainer = document.getElementById('game-container');
     const mainBg = document.getElementById('main-bg');
     const disasterLayer = document.getElementById('disaster-layer');
@@ -358,35 +355,14 @@
     }
 
 
-    // --- 1. TRANSIÇÃO INICIAL (ATENÇÃO -> PRÓLOGO) ---
-    document.getElementById('btn-start-intro').addEventListener('click', function() {
-        // Tenta iniciar o áudio do primeiro slide do prólogo aqui
-        // Isso "desbloqueia" o áudio no navegador
-        if(prologueData[0].audio) {
-            changeAudioTrack(prologueData[0].audio);
-        }
-
-        // Animação de saída
-        introScreen.style.transition = "opacity 1s";
-        introScreen.style.opacity = "0";
-        
-        setTimeout(() => {
-            introScreen.style.display = "none";
-            mainBg.className = "background-fixed bg-prologue"; // Muda filtro do fundo
-            updatePrologue(); // Renderiza o prólogo
-            prologueContainer.style.display = "flex";
-        }, 1000);
-    });
-
-
-    // --- 2. LÓGICA DO PRÓLOGO ---
+    // --- 1. LÓGICA DO PRÓLOGO ---
     const prologueData = [
         {
             title: "INÍCIO",
             text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio ou uma enchente — o caos domina os primeiros minutos.\n\nMas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre.\"",
             img: "https://www.pragmatismopolitico.com.br/wp-content/uploads/2018/05/acidente-cuba-e1527030296940.jpg",
             audio: "audio1.mp3",
-            hasEffect: true 
+            hasEffect: true
         },
         {
             title: "O PAPEL DO MÉDICO",
@@ -427,14 +403,18 @@
     ];
 
     let currentPrologueIndex = 0;
+    let isFirstInteraction = true;
 
     function updatePrologue() {
         const data = prologueData[currentPrologueIndex];
         document.getElementById('prologue-title').innerText = data.title;
         document.getElementById('prologue-text').innerText = data.text;
         mainBg.style.backgroundImage = `url('${data.img}')`;
+        
+        // Configura fundo para prólogo
+        mainBg.className = "background-fixed bg-prologue";
 
-        // Lógica do Efeito de Desastre
+        // Efeito de Desastre apenas se hasEffect for true
         if (data.hasEffect) {
             startDisasterEffect();
         } else {
@@ -446,7 +426,7 @@
         
         const nextBtn = document.getElementById('btn-next-prologue');
         if (currentPrologueIndex === prologueData.length - 1) {
-            nextBtn.innerText = "IR PARA SIMULAÇÃO ⚠";
+            nextBtn.innerText = "IR PARA AÇÃO ⚠";
             nextBtn.style.borderColor = "#ff3d00";
             nextBtn.style.color = "#ff3d00";
         } else {
@@ -454,23 +434,34 @@
             nextBtn.style.borderColor = "#2196F3";
             nextBtn.style.color = "#2196F3";
         }
+
+        // Troca de Áudio
+        if (!isFirstInteraction && data.audio) {
+            changeAudioTrack(data.audio);
+        }
     }
 
     function changeAudioTrack(sourceUrl) {
+        audioPrologue.pause();
         audioPrologue.src = sourceUrl;
         audioPrologue.load();
         audioPrologue.play().catch(e => console.log("Audio auto-play blocked (ok if first load)"));
     }
 
     document.getElementById('btn-next-prologue').addEventListener('click', () => {
-        if (currentPrologueIndex < prologueData.length - 1) {
-            currentPrologueIndex++;
+        if(isFirstInteraction) {
+            isFirstInteraction = false;
             if(prologueData[currentPrologueIndex].audio) {
                 changeAudioTrack(prologueData[currentPrologueIndex].audio);
             }
+        }
+
+        if (currentPrologueIndex < prologueData.length - 1) {
+            currentPrologueIndex++;
             updatePrologue();
         } else {
-            startTheGame(); // FIM DO PRÓLOGO -> VAI PARA O JOGO
+            stopDisasterEffect();
+            showIntroScreen(); // VAI PARA A TELA DE ATENÇÃO
         }
     });
 
@@ -485,6 +476,11 @@
     });
 
     function togglePrologueAudio() {
+        if (isFirstInteraction) {
+            isFirstInteraction = false;
+            changeAudioTrack(prologueData[currentPrologueIndex].audio);
+            return;
+        }
         if (audioPrologue.paused) {
             audioPrologue.play();
             document.getElementById('audio-status').innerText = "🔊 Tocando...";
@@ -495,26 +491,46 @@
     }
 
 
-    // --- 3. TRANSIÇÃO PARA O JOGO ---
-    function startTheGame() {
-        // Para áudio do prólogo
-        audioPrologue.pause();
-        stopDisasterEffect();
-
-        // Inicia áudio do jogo
-        audioGame.play().catch(e => console.log("Game audio:", e));
+    // --- 2. TRANSIÇÃO PARA TELA DE ALERTA ---
+    function showIntroScreen() {
+        audioPrologue.pause(); // Para o áudio do prólogo
 
         prologueContainer.style.display = 'none';
+        
+        // Configura fundo para o jogo (imagem fixa, filtro escuro)
         mainBg.style.backgroundImage = "url('img1.jpg')";
-        mainBg.className = "background-fixed bg-game"; // Volta filtro escuro/vermelho
+        mainBg.className = "background-fixed bg-game"; 
 
-        gameContainer.style.display = 'flex';
+        introScreen.style.display = 'flex';
         setTimeout(() => {
-            gameContainer.style.opacity = '1';
-            gameContainer.style.animation = 'fadeIn 1s ease-out';
-            goTo('start');
-        }, 100);
+            introScreen.style.opacity = '1';
+            // Aqui o efeito de chuva pode começar na tela de alerta se desejar
+            // startDisasterEffect(); 
+        }, 50);
     }
+
+
+    // --- 3. TRANSIÇÃO PARA O JOGO (COM AUDIO!) ---
+    document.getElementById('btn-start-simulation').addEventListener('click', () => {
+        
+        // Toca áudio do jogo
+        audioGame.currentTime = 0;
+        audioGame.play().catch(e => console.error("Audio game auto-play:", e));
+
+        introScreen.style.transition = "opacity 1s";
+        introScreen.style.opacity = '0';
+
+        setTimeout(() => {
+            introScreen.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            
+            setTimeout(() => {
+                gameContainer.style.opacity = '1';
+                gameContainer.style.animation = 'fadeIn 1s ease-out';
+                goTo('start');
+            }, 100);
+        }, 1000);
+    });
 
 
     // --- 4. MOTOR DO JOGO ---
@@ -661,6 +677,8 @@
             choicesContainer.style.opacity = "1";
         }, 100);
     }
+
+    updatePrologue();
 </script>
 </body>
 </html>
