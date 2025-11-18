@@ -18,7 +18,7 @@
             justify-content: center;
         }
 
-        /* FUNDOS (MUDAM CONFORME A FASE) */
+        /* FUNDOS */
         .background-fixed {
             position: fixed;
             top: 0;
@@ -30,82 +30,30 @@
             z-index: -5;
             transition: all 1s ease;
         }
-        /* Filtro vermelho para a intro e jogo */
-        .bg-crisis {
-            background-image: url('img1.jpg'); 
-            filter: brightness(0.3) contrast(1.2) blur(2px) sepia(0.5) hue-rotate(-50deg);
-        }
-        /* Filtro mais claro para o prólogo */
+        
+        /* Fundo Inicial (Prólogo) */
         .bg-prologue {
             filter: brightness(0.4) contrast(1.1);
         }
-
-
-        /* --- 1. TELA DE ABERTURA (PLANTÃO) --- */
-        #intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        #intro-content h1 {
-            color: #ff0000;
-            font-size: 4em;
-            margin-bottom: 0;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-            animation: pulse 1.5s infinite;
-            letter-spacing: 5px;
-        }
-
-        #intro-content h2 {
-            color: #fff;
-            font-weight: normal;
-            margin-top: 10px;
-            font-size: 1.5em;
-        }
-
-        #btn-start-intro {
-            background: transparent;
-            border: 3px solid #ff0000;
-            color: #ff0000;
-            padding: 20px 50px;
-            font-size: 1.8em;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 50px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            animation: borderPulse 2s infinite;
-        }
-        #btn-start-intro:hover {
-            background-color: #ff0000;
-            color: #000;
-            box-shadow: 0 0 30px #ff0000;
+        
+        /* Fundo do Jogo/Alerta */
+        .bg-game {
+            background-image: url('img1.jpg'); 
+            filter: brightness(0.3) contrast(1.2) blur(2px);
         }
 
 
-        /* --- 2. TELA DE PRÓLOGO (EXPLICAÇÃO) --- */
+        /* --- 1. TELA DE PRÓLOGO (AGORA É A PRIMEIRA) --- */
         #prologue-container {
             width: 90%;
             max-width: 900px;
-            background-color: rgba(10, 10, 20, 0.95);
+            background-color: rgba(20, 20, 25, 0.95);
             border: 1px solid #444;
             border-top: 5px solid #2196F3; /* Azul Ciência */
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-            display: none; /* Começa escondido */
+            display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
@@ -150,20 +98,77 @@
             font-size: 1em;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: inherit;
         }
         .btn-prologue:hover { background: #2196F3; color: white; }
+
+
+        /* --- 2. TELA DE ABERTURA/PLANTÃO (AGORA É A SEGUNDA) --- */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            z-index: 2000;
+            display: none; /* Começa escondida, aparece depois do prólogo */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+        }
+
+        #intro-content h1 {
+            color: #ff3d00;
+            font-size: 4em;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255, 61, 0, 0.8);
+            animation: pulse 1.5s infinite;
+            letter-spacing: 5px;
+        }
+
+        #intro-content h2 {
+            color: #fff;
+            font-weight: normal;
+            margin-top: 10px;
+            font-size: 1.5em;
+        }
+
+        #btn-start-game {
+            background: transparent;
+            border: 3px solid #ff3d00;
+            color: #ff3d00;
+            padding: 20px 50px;
+            font-size: 1.8em;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 50px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            animation: borderPulse 2s infinite;
+        }
+        #btn-start-game:hover {
+            background-color: #ff3d00;
+            color: #000;
+            box-shadow: 0 0 30px #ff3d00;
+        }
 
 
         /* --- 3. TELA DO JOGO (SIMULAÇÃO) --- */
         #game-container {
             width: 80%;
             max-width: 800px;
-            background-color: rgba(40, 0, 0, 0.9); /* Fundo avermelhado */
-            border: 1px solid #ff0000;
-            border-left: 5px solid #ff0000;
+            /* VOLTANDO PARA COR ESCURA NEUTRA */
+            background-color: rgba(20, 20, 20, 0.95); 
+            border: 1px solid #444;
+            border-left: 5px solid #d32f2f; /* Detalhe vermelho lateral mantido */
             border-radius: 8px;
             padding: 40px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
             min-height: 400px;
             display: none; /* Começa escondido */
             flex-direction: column;
@@ -172,15 +177,15 @@
         }
 
         .header {
-            border-bottom: 1px solid #ff5555;
+            border-bottom: 1px solid #555;
             padding-bottom: 10px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             font-size: 0.9em;
-            color: #ffaaaa;
+            color: #888;
         }
-        .status-blink { color: #ff0000; font-weight: bold; animation: blink 1s infinite; text-shadow: 0 0 5px red; }
+        .status-blink { color: #d32f2f; font-weight: bold; animation: blink 1s infinite; }
         
         #story-text { font-size: 1.2em; line-height: 1.6; white-space: pre-wrap; min-height: 100px; }
 
@@ -192,18 +197,17 @@
             border-radius: 4px; 
             display: none; 
             font-size: 1.1em;
-            background-color: rgba(0, 0, 0, 0.5);
-            border: 1px solid #fff;
         }
-        .feedback-success { border-color: #4CAF50 !important; color: #81c784; }
-        .feedback-error { border-color: #f44336 !important; color: #ff8a80; }
+        .feedback-success { background-color: rgba(46, 125, 50, 0.2); border: 1px solid #2e7d32; color: #81c784; }
+        .feedback-error { background-color: rgba(198, 40, 40, 0.2); border: 1px solid #c62828; color: #e57373; }
 
         .choices { display: flex; flex-direction: column; gap: 10px; margin-top: 30px; opacity: 0; transition: opacity 1s; }
         
+        /* Botões Amarelos (Padrão original) */
         .btn { 
             background: transparent; 
-            border: 1px dashed #ff5555; 
-            color: #ff5555; 
+            border: 1px dashed #FFEB3B; 
+            color: #FFEB3B; 
             padding: 15px; 
             text-align: left; 
             font-family: inherit; 
@@ -212,39 +216,27 @@
             transition: all 0.2s; 
         }
         .btn:hover { 
-            background-color: #ff0000; 
-            color: #fff; 
+            background-color: #FFEB3B; 
+            color: #000; 
             border-style: solid; 
             transform: translateX(5px); 
         }
         
-        .cursor { display: inline-block; width: 10px; height: 1em; background-color: #f00; animation: blink 1s infinite; vertical-align: bottom; }
+        .cursor { display: inline-block; width: 10px; height: 1em; background-color: #0f0; animation: blink 1s infinite; vertical-align: bottom; }
         
         /* ANIMAÇÕES */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes borderPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
+        @keyframes borderPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 61, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 61, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 61, 0, 0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="background-fixed bg-crisis" id="main-bg"></div>
+    <div class="background-fixed bg-prologue" id="main-bg"></div>
 
     <audio id="audio-prologue" src="narracao_prologo.mp3" preload="auto"></audio>
     <audio id="audio-game" src="audio.mp3" preload="auto"></audio>
-
-
-    <div id="intro-screen">
-        <div id="intro-content">
-            <h1>ATENÇÃO</h1>
-            <h2>SIMULAÇÃO DE DESASTRE AMBIENTAL</h2>
-            <h2>GRUPO 5</h2>
-            
-            <button id="btn-start-intro">INICIAR SIMULAÇÃO</button>
-            <div id="loading-msg" style="margin-top:20px; color:#888;"></div>
-        </div>
-    </div>
 
 
     <div id="prologue-container">
@@ -255,11 +247,22 @@
             <button class="btn-prologue" id="btn-prev-prologue" style="visibility: hidden;">Anterior</button>
             
             <div style="font-size: 0.8em; color: #aaa; display: flex; align-items: center; gap: 10px;">
-                <span id="audio-status">🔈 Áudio Ativado</span>
+                <span id="audio-status">🔈 Áudio (Clique Próximo)</span>
                 <button class="btn-prologue" onclick="togglePrologueAudio()" style="padding: 5px 10px;">⏯️</button>
             </div>
 
             <button class="btn-prologue" id="btn-next-prologue">Próximo ➜</button>
+        </div>
+    </div>
+
+
+    <div id="intro-screen">
+        <div id="intro-content">
+            <h1>ATENÇÃO</h1>
+            <h2>SITUAÇÃO DE DESASTRE EM ANDAMENTO</h2>
+            <h2>AÇÃO IMEDIATA NECESSÁRIA</h2>
+            
+            <button id="btn-start-game">INICIAR OPERAÇÃO</button>
         </div>
     </div>
 
@@ -281,50 +284,14 @@
 
 <script>
     // --- VARIÁVEIS GERAIS ---
-    const introScreen = document.getElementById('intro-screen');
     const prologueContainer = document.getElementById('prologue-container');
+    const introScreen = document.getElementById('intro-screen');
     const gameContainer = document.getElementById('game-container');
     const mainBg = document.getElementById('main-bg');
     const audioPrologue = document.getElementById('audio-prologue');
     const audioGame = document.getElementById('audio-game');
 
-    // --- 1. LÓGICA DA TELA DE ABERTURA ---
-    document.getElementById('btn-start-intro').addEventListener('click', function() {
-        const btn = this;
-        const msg = document.getElementById('loading-msg');
-        
-        msg.innerText = "Carregando dados...";
-        
-        // Tenta iniciar áudio do prólogo (Necessário clique do usuário)
-        audioPrologue.play().then(() => {
-            // Sucesso
-            transitionToIntro();
-        }).catch(e => {
-            console.log("Audio block:", e);
-            // Se bloquear, vai mesmo assim
-            transitionToIntro();
-        });
-    });
-
-    function transitionToIntro() {
-        // Fade out da tela vermelha
-        introScreen.style.transition = "opacity 1s";
-        introScreen.style.opacity = "0";
-        
-        setTimeout(() => {
-            introScreen.style.display = "none";
-            
-            // Troca o fundo para "Azul/Neutro" do prólogo? 
-            // Ou mantemos vermelho? Se quiser mudar: mainBg.classList.remove('bg-crisis'); mainBg.classList.add('bg-prologue');
-            // Vou mudar a imagem de fundo dinamicamente:
-            updatePrologue(); 
-
-            prologueContainer.style.display = "flex";
-        }, 1000);
-    }
-
-
-    // --- 2. LÓGICA DO PRÓLOGO (CARROSSEL) ---
+    // --- 1. LÓGICA DO PRÓLOGO ---
     const prologueData = [
         {
             title: "0:00 - ABERTURA",
@@ -370,33 +337,35 @@
         document.getElementById('prologue-title').innerText = data.title;
         document.getElementById('prologue-text').innerText = data.text;
         
-        // Muda o fundo suavemente
         mainBg.style.backgroundImage = `url('${data.img}')`;
-        mainBg.className = "background-fixed bg-prologue"; // Aplica filtro mais claro
 
         document.getElementById('btn-prev-prologue').style.visibility = 
             currentPrologueIndex === 0 ? 'hidden' : 'visible';
         
         const nextBtn = document.getElementById('btn-next-prologue');
         if (currentPrologueIndex === prologueData.length - 1) {
-            nextBtn.innerText = "IR PARA AÇÃO ⚠";
-            nextBtn.style.backgroundColor = "#d32f2f";
-            nextBtn.style.color = "white";
-            nextBtn.style.borderColor = "#d32f2f";
+            nextBtn.innerText = "IR PARA SIMULAÇÃO ⚠";
+            nextBtn.style.borderColor = "#ff3d00";
+            nextBtn.style.color = "#ff3d00";
         } else {
             nextBtn.innerText = "Próximo ➜";
-            nextBtn.style.backgroundColor = "transparent";
-            nextBtn.style.color = "#2196F3";
             nextBtn.style.borderColor = "#2196F3";
+            nextBtn.style.color = "#2196F3";
         }
     }
 
     document.getElementById('btn-next-prologue').addEventListener('click', () => {
+        // Tenta tocar o áudio na primeira interação (navegadores exigem isso)
+        if(audioPrologue.paused && currentPrologueIndex === 0) {
+            audioPrologue.play().catch(e=>console.log("Audio start"));
+            document.getElementById('audio-status').innerText = "🔊 Tocando...";
+        }
+
         if (currentPrologueIndex < prologueData.length - 1) {
             currentPrologueIndex++;
             updatePrologue();
         } else {
-            startTheGame();
+            showIntroScreen(); // FIM DO PRÓLOGO -> VAI PARA TELA DE ALERTA
         }
     });
 
@@ -417,30 +386,47 @@
         }
     }
 
-    // --- 3. TRANSIÇÃO PARA O JOGO ---
-    function startTheGame() {
-        // Para áudio do prólogo, inicia o do jogo
-        audioPrologue.pause();
-        audioGame.play().catch(e => console.log("Game audio:", e));
 
-        // Esconde prólogo
+    // --- 2. TRANSIÇÃO PARA TELA DE ALERTA ---
+    function showIntroScreen() {
+        audioPrologue.pause(); // Para o áudio explicativo
+
         prologueContainer.style.display = 'none';
         
-        // Volta fundo para imagem do jogo e filtro vermelho
+        // Muda fundo para imagem do jogo e filtro "crise"
         mainBg.style.backgroundImage = "url('img1.jpg')";
-        mainBg.className = "background-fixed bg-crisis";
+        mainBg.className = "background-fixed bg-game";
 
-        // Mostra Jogo
-        gameContainer.style.display = 'flex';
+        introScreen.style.display = 'flex';
+        // Fade in
         setTimeout(() => {
-            gameContainer.style.opacity = '1';
-            gameContainer.style.animation = 'fadeIn 1s ease-out';
-            goTo('start');
-        }, 100);
+            introScreen.style.opacity = '1';
+        }, 50);
     }
 
 
-    // --- 4. MOTOR DO JOGO (CORRIGIDO) ---
+    // --- 3. TRANSIÇÃO PARA O JOGO ---
+    document.getElementById('btn-start-game').addEventListener('click', () => {
+        // Toca o som ambiente do jogo
+        audioGame.play().catch(e => console.log("Game audio:", e));
+
+        introScreen.style.transition = "opacity 1s";
+        introScreen.style.opacity = '0';
+
+        setTimeout(() => {
+            introScreen.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            
+            setTimeout(() => {
+                gameContainer.style.opacity = '1';
+                gameContainer.style.animation = 'fadeIn 1s ease-out';
+                goTo('start');
+            }, 100);
+        }, 1000);
+    });
+
+
+    // --- 4. MOTOR DO JOGO ---
     const story = {
         "start": {
             text: "[06:05] CONEXÃO ESTABELECIDA COM POSTO DE COMANDO...\n\nO deslizamento acabou de acontecer. A repórter confirmou o caos local. Você é o Coordenador Médico.\n\nRecursos limitados. Vidas em risco.\n\nSua primeira decisão definirá toda a operação. Qual sua prioridade?",
@@ -553,7 +539,6 @@
 
     function goTo(sceneId) {
         const scene = story[sceneId];
-        
         textElement.innerHTML = "";
         choicesContainer.innerHTML = "";
         choicesContainer.style.opacity = "0";
@@ -585,6 +570,9 @@
             choicesContainer.style.opacity = "1";
         }, 100);
     }
+
+    // INICIALIZAR
+    updatePrologue();
 </script>
 </body>
 </html>
