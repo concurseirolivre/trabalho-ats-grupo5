@@ -76,7 +76,7 @@
         }
 
 
-        /* --- 1. TELA DE PRÓLOGO --- */
+        /* --- 1. TELA DE PRÓLOGO (PRIMEIRA) --- */
         #prologue-container {
             width: 90%;
             max-width: 900px;
@@ -92,7 +92,6 @@
             text-align: center;
             z-index: 1000;
             animation: fadeIn 1s;
-            position: relative;
         }
 
         #prologue-title {
@@ -137,7 +136,7 @@
         .btn-prologue:hover { background: #2196F3; color: white; }
 
 
-        /* --- 2. TELA DE ABERTURA/ALERTA --- */
+        /* --- 2. TELA DE ABERTURA/ALERTA (SEGUNDA) --- */
         #intro-screen {
             position: fixed;
             top: 0;
@@ -146,7 +145,7 @@
             height: 100%;
             background-color: rgba(0,0,0,0.9);
             z-index: 2000;
-            display: none;
+            display: none; /* Começa escondida */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -192,13 +191,13 @@
         }
 
 
-        /* --- 3. TELA DO JOGO --- */
+        /* --- 3. TELA DO JOGO (TERCEIRA) --- */
         #game-container {
             width: 80%;
             max-width: 800px;
-            background-color: rgba(20, 20, 20, 0.95);
+            background-color: rgba(20, 20, 20, 0.95); /* Cor Neutra */
             border: 1px solid #444;
-            border-left: 5px solid #d32f2f;
+            border-left: 5px solid #d32f2f; /* Detalhe vermelho lateral */
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
@@ -267,7 +266,10 @@
     
     <div id="disaster-layer"></div>
 
-    <audio id="audio-prologue" src="" preload="auto"></audio> <audio id="audio-news" src="noticia.mp3" preload="auto"></audio> <audio id="audio-game" src="audio.mp3" preload="auto"></audio> <div id="prologue-container">
+    <audio id="audio-prologue" src="narracao_prologo.mp3" preload="auto"></audio>
+    <audio id="audio-game" src="audio.mp3" preload="auto"></audio>
+
+    <div id="prologue-container">
         <div id="prologue-title">INTRODUÇÃO TÉCNICA</div>
         <div id="prologue-text"></div>
         
@@ -318,7 +320,6 @@
     
     // Players de Áudio
     const audioPrologue = document.getElementById('audio-prologue');
-    const audioNews = document.getElementById('audio-news');
     const audioGame = document.getElementById('audio-game');
 
     // --- EFEITOS DE DESASTRE (CHUVA) ---
@@ -355,38 +356,38 @@
     const prologueData = [
         {
             title: "INÍCIO",
-            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio, um acidente químico ou uma enchente — o caos domina os primeiros minutos. Mas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre, desde os primeiros passos até as situações mais complexas.\"",
+            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio ou uma enchente — o caos domina os primeiros minutos.\n\nMas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre.\"",
             img: "https://www.pragmatismopolitico.com.br/wp-content/uploads/2018/05/acidente-cuba-e1527030296940.jpg",
             audio: "audio1.mp3",
             hasEffect: true 
         },
         {
             title: "O PAPEL DO MÉDICO",
-            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta do sistema de saúde. E, nesse contexto, o médico assume papéis que vão muito além do consultório. Ele precisa entender fisiologia, toxicologia, epidemiologia e, principalmente, como priorizar vidas quando não há recursos para todos. \n\nÉ aqui que entram conceitos como triagem, manejo inicial das vias aéreas, controle de hemorragias e tomada de decisão rápida.\"",
+            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta.\n\nO médico precisa entender fisiologia, toxicologia e epidemiologia. É aqui que entram conceitos como triagem, manejo de vias aéreas e tomada de decisão rápida quando não há recursos para todos.\"",
             img: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=1920&q=80",
             audio: "audio2.mp3"
         },
         {
             title: "TRIAGEM (MÉTODO START)",
-            text: "\"A triagem é o coração da resposta médica. É nela que o médico define quem precisa de intervenção imediata, quem pode esperar e quem, infelizmente, não tem chance real de sobrevivência dado o cenário.\n\nO método START baseia-se em:\n• Respiração – Se a vítima não respira após reposicionamento das vias aéreas, é classificada como preta. Se respira >30 incursões por minuto, é vermelha.)\n• Perfusão – Tempo de enchimento capilar >2 segundos sugere choque hipovolêmico pela perda aguda de volume.)\n• Estado mental – Incapacidade de seguir comandos indica possível hipóxia ou perfusão cerebral inadequada.)\"",
+            text: "\"A triagem é o coração da resposta médica. É nela que o médico define quem precisa de intervenção imediata.\n\nO método START baseia-se em:\n• Respiração (>30rpm = Vermelho)\n• Perfusão (>2s = Choque)\n• Estado mental (Não obedece comandos = Hipóxia)\"",
             img: "https://images.unsplash.com/photo-1516574187841-69301976e49e?auto=format&fit=crop&w=1920&q=80",
             audio: "audio3.mp3"
         },
         {
             title: "SITUAÇÕES SIMPLES",
-            text: "\"Mesmo nos desastres, a maior parte das demandas médicas são simples: ferimentos leves, crises de ansiedade, desidratação, hipoglicemia.\n\nNesses casos, o médico atua como estabilizador: faz hidratação oral, sutura lacerações, prescreve analgésicos, controla picos hipertensivos induzidos por estresse e monitora pessoas vulneráveis, como gestantes e crianças.\"",
+            text: "\"A maioria das demandas são simples: ferimentos leves, ansiedade, desidratação.\n\nO médico atua como estabilizador: hidratação oral, suturas, analgésicos e controle de hipertensão por estresse em vulneráveis.\"",
             img: "https://www.saude.sp.gov.br/resources/hospital-leonor-mendes-de-barros/acesso-rapido/primeiros-socorros-em-caso-de-incendio.jpg",
             audio: "audio4.mp3"
         },
         {
             title: "ALTA COMPLEXIDADE",
-            text: "\"Em outros cenários, o médico enfrenta quadros críticos. Em incêndios, por exemplo, a prioridade é tratar hipoxemia e intoxicação por monóxido de carbono — que compete com o O₂ pela hemoglobina, causando hipóxia tecidual.\nEm deslizamentos, o risco é a síndrome do esmagamento, marcada por liberação de potássio e mioglobina para o sangue, podendo causar arritmias fatais e lesão renal aguda.).\n\nEm acidentes químicos, a conduta envolve descontaminação, neutralização e uso de antídotos específicos, como atropina e pralidoxima nos organofosforados.\n\nDecisões baseadas em fisiologia e protocolos.\"",
+            text: "\"Em incêndios: Intoxicação por monóxido de carbono.\nEm deslizamentos: Síndrome do Esmagamento (liberação de mioglobina e potássio, risco renal e arritmias).\n\nDecisões baseadas em fisiologia e protocolos.\"",
             img: "https://ogimg.infoglobo.com.br/in/23946251-8e9-d10/FT1086A/GettyImages-56441651.jpg",
             audio: "audio5.mp3"
         },
         {
             title: "LOGÍSTICA E LIDERANÇA",
-            text: "\"O médico também coordena equipes, solicita apoio, organiza fluxos de evacuação e adapta o cuidado conforme os recursos disponíveis.\n\nÉ ele quem conversa com bombeiros, defesa civil, enfermagem e motoristas de resgate para garantir que ninguém fique sem assistência. \n\n E, no abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação, controle de água e orientação psicológica.\"",
+            text: "\"O médico coordena fluxos e conversa com bombeiros e defesa civil.\n\nNo abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação e controle da água.\"",
             img: "https://cdn.folhape.com.br/img/c/1200/900/dn_arquivo/2020/01/medico1.jpg",
             audio: "audio6.mp3"
         },
@@ -407,7 +408,7 @@
         document.getElementById('prologue-text').innerText = data.text;
         mainBg.style.backgroundImage = `url('${data.img}')`;
 
-        // Efeitos
+        // Lógica do Efeito de Desastre
         if (data.hasEffect) {
             startDisasterEffect();
         } else {
@@ -428,7 +429,7 @@
             nextBtn.style.color = "#2196F3";
         }
 
-        // Audio
+        // Troca de Áudio
         if (!isFirstInteraction && data.audio) {
             changeAudioTrack(data.audio);
         }
@@ -438,7 +439,7 @@
         audioPrologue.pause();
         audioPrologue.src = sourceUrl;
         audioPrologue.load();
-        audioPrologue.play().catch(e => console.log("Autoplay block"));
+        audioPrologue.play().catch(e => console.log("Audio auto-play blocked (ok if first load)"));
     }
 
     document.getElementById('btn-next-prologue').addEventListener('click', () => {
@@ -454,7 +455,7 @@
             updatePrologue();
         } else {
             stopDisasterEffect();
-            showIntroScreen(); // Vai para a tela de Atenção
+            showIntroScreen(); // VAI PARA A TELA DE ATENÇÃO
         }
     });
 
@@ -487,14 +488,16 @@
     // --- 2. TRANSIÇÃO PARA TELA DE ALERTA ---
     function showIntroScreen() {
         audioPrologue.pause(); // Para o áudio do prólogo
-        
-        // TOCA O AUDIO DA NOTÍCIA (noticia.mp3)
-        audioNews.currentTime = 0;
-        audioNews.play().catch(e => console.error("Erro audio noticia:", e));
+
+        // *** AQUI ESTÁ A ALTERAÇÃO ***
+        // TOCA O ÁUDIO DO JOGO (ALARME) ASSIM QUE A TELA DE ATENÇÃO APARECE
+        audioGame.currentTime = 0;
+        audioGame.play().catch(e => console.error("Audio game auto-play:", e));
+        // *****************************
 
         prologueContainer.style.display = 'none';
         mainBg.style.backgroundImage = "url('img1.jpg')";
-        mainBg.className = "background-fixed bg-game";
+        mainBg.className = "background-fixed bg-game"; 
 
         introScreen.style.display = 'flex';
         setTimeout(() => {
@@ -505,14 +508,6 @@
 
     // --- 3. TRANSIÇÃO PARA O JOGO ---
     document.getElementById('btn-start-simulation').addEventListener('click', () => {
-        
-        // PARA A NOTÍCIA
-        audioNews.pause();
-        
-        // TOCA O SOM DO JOGO
-        audioGame.currentTime = 0;
-        audioGame.play().catch(e => console.error("Audio game auto-play:", e));
-
         introScreen.style.transition = "opacity 1s";
         introScreen.style.opacity = '0';
 
