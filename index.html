@@ -289,6 +289,7 @@
         <div class="nav-buttons">
             <button class="btn-prologue" id="btn-prev-prologue" style="visibility: hidden;">Anterior</button>
             
+            <!-- Botão de narração (context-aware) -->
             <button class="btn-prologue" id="btn-play-pause" style="min-width: 160px;">⏯️ Play</button>
 
             <button class="btn-prologue" id="btn-next-prologue">Próximo ➜</button>
@@ -343,6 +344,7 @@
     let currentPrologueIndex = 0;
     let isFirstInteraction = true;
     let disasterInterval;
+    let currentStage = 'prologue'; // 'prologue' | 'intro' | 'game'
 
     // --- DADOS DO PRÓLOGO ---
     const prologueData = [
@@ -439,39 +441,48 @@
         prologueContainer.classList.remove('shake-screen');
     }
 
-    // --- FUNÇÕES DE ÁUDIO (PRÓLOGO) ---
-    
-    function loadAndPlayAudio(sourceUrl) {
-        // Se for a primeira vez e o usuário não interagiu, não toca ainda.
-        // Apenas carrega.
+    // --- FUNÇÕES DE ÁUDIO (PRÓLOGO / GAME) ---
+    function loadAndPlayAudioPrologue(sourceUrl) {
         audioPrologue.src = sourceUrl;
         audioPrologue.load();
-        
+        // se o usuário já interagiu, toca
         if (!isFirstInteraction) {
-            const playPromise = audioPrologue.play();
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => updatePlayButtonUI(true))
-                    .catch(e => {
-                        console.log("Autoplay blocked:", e);
-                        updatePlayButtonUI(false);
-                    });
-            }
+            audioPrologue.play().then(() => {
+                updatePlayButtonUI(true);
+            }).catch(e => {
+                console.log("Autoplay prologue bloqueado:", e);
+                updatePlayButtonUI(false);
+            });
         } else {
-            updatePlayButtonUI(false); // Mostra que está pausado/pronto para tocar
+            updatePlayButtonUI(false);
         }
     }
 
+    // Atualiza texto do botão dependendo do estágio e do estado do áudio associado
     function updatePlayButtonUI(isPlaying) {
-        if (isPlaying) {
-            btnPlayPause.innerText = "⏸️ Pausar";
+        if (currentStage === 'prologue') {
+            btnPlayPause.innerText = isPlaying ? "⏸️ Pausar (Prólogo)" : "▶️ Tocar Narração (Prólogo)";
+        } else if (currentStage === 'intro' || currentStage === 'game') {
+            btnPlayPause.innerText = isPlaying ? "⏸️ Pausar (Narração)" : "▶️ Reproduzir (Narração)";
         } else {
-            btnPlayPause.innerText = "▶️ Tocar Narração";
+            btnPlayPause.innerText = "⏯️ Play";
         }
+    }
+
+    // Helper para tocar audioGame com checagem
+    function playAudioGameIfPossible() {
+        audioGame.currentTime = 0;
+        return audioGame.play().then(() => {
+            updatePlayButtonUI(true);
+        }).catch(e => {
+            console.error("Erro ao tentar tocar audioGame:", e);
+            updatePlayButtonUI(false);
+        });
     }
 
     // --- ATUALIZAÇÃO DO PRÓLOGO ---
     function updatePrologue() {
+        currentStage = 'prologue';
         const data = prologueData[currentPrologueIndex];
         document.getElementById('prologue-title').innerText = data.title;
         document.getElementById('prologue-text').innerText = data.text;
@@ -497,35 +508,74 @@
             btnNext.style.color = "#2196F3";
         }
 
-        // Gerencia Áudio
+        // Gerencia Áudio do prólogo
         if (data.audio) {
-            loadAndPlayAudio(data.audio);
+            loadAndPlayAudioPrologue(data.audio);
+        } else {
+            audioPrologue.pause();
+            updatePlayButtonUI(false);
         }
     }
 
     // --- EVENT LISTENERS (CONTROLES) ---
 
-    // Botão Play/Pause
+    // Botão Play/Pause (context-aware)
     btnPlayPause.addEventListener('click', () => {
         // Libera interação no primeiro clique
         if (isFirstInteraction) {
             isFirstInteraction = false;
-            const data = prologueData[currentPrologueIndex];
-            // Se o src estiver vazio ou diferente, carrega. Senão, só dá play.
-            if(!audioPrologue.src.includes(data.audio)) {
-                loadAndPlayAudio(data.audio);
+        }
+
+        if (currentStage === 'prologue') {
+            // Controla o audioPrologue
+            if (!audioPrologue.src) {
+                // carrega atual
+                const data = prologueData[currentPrologueIndex];
+                if (data && data.audio) audioPrologue.src = data.audio;
+            }
+            if (audioPrologue.paused) {
+                audioPrologue.play().then(() => updatePlayButtonUI(true)).catch(e => {
+                    console.log("Erro play prologue:", e);
+                    updatePlayButtonUI(false);
+                });
             } else {
-                audioPrologue.play().then(() => updatePlayButtonUI(true));
+                audioPrologue.pause();
+                updatePlayButtonUI(false);
             }
             return;
         }
 
-        if (audioPrologue.paused) {
-            audioPrologue.play().then(() => updatePlayButtonUI(true));
+        // Se não estamos no prólogo, controlamos audioGame (narracao principal)
+        if (audioGame.paused) {
+            audioGame.play().then(() => updatePlayButtonUI(true)).catch(e => {
+                console.log("Erro play audioGame:", e);
+                updatePlayButtonUI(false);
+            });
         } else {
-            audioPrologue.pause();
+            audioGame.pause();
             updatePlayButtonUI(false);
         }
+    });
+
+    // Atualiza botão quando áudios mudam de estado
+    audioPrologue.addEventListener('play', () => {
+        if (currentStage === 'prologue') updatePlayButtonUI(true);
+    });
+    audioPrologue.addEventListener('pause', () => {
+        if (currentStage === 'prologue') updatePlayButtonUI(false);
+    });
+    audioPrologue.addEventListener('ended', () => {
+        if (currentStage === 'prologue') updatePlayButtonUI(false);
+    });
+
+    audioGame.addEventListener('play', () => {
+        if (currentStage !== 'prologue') updatePlayButtonUI(true);
+    });
+    audioGame.addEventListener('pause', () => {
+        if (currentStage !== 'prologue') updatePlayButtonUI(false);
+    });
+    audioGame.addEventListener('ended', () => {
+        if (currentStage !== 'prologue') updatePlayButtonUI(false);
     });
 
     // Botão Próximo
@@ -542,11 +592,19 @@
             // FIM DO PRÓLOGO -> VAI PARA TELA DE ALERTA
             stopDisasterEffect();
             audioPrologue.pause(); 
-            
-            // TOCA O ÁUDIO DA NOTÍCIA IMEDIATAMENTE AQUI
-            audioNews.currentTime = 0;
-            audioNews.play().catch(e => console.error("Erro audio noticia:", e));
-            
+
+            // === AQUI: quando o usuário clica em "IR PARA AÇÃO", tocamos audio.mp3 imediatamente ===
+            currentStage = 'intro';
+            // Tenta tocar audioGame (audio.mp3). não usamos audioNews aqui por pedido do usuário.
+            audioGame.currentTime = 0;
+            audioGame.play().then(() => {
+                updatePlayButtonUI(true);
+            }).catch(e => {
+                // Se autoplay for bloqueado, apenas atualiza UI e mantém a tela
+                console.warn("Não foi possível iniciar audioGame automaticamente:", e);
+                updatePlayButtonUI(false);
+            });
+
             showIntroScreen();
         }
     });
@@ -560,7 +618,6 @@
     });
 
     // --- TRANSIÇÕES DE TELA ---
-
     function showIntroScreen() {
         prologueContainer.style.display = 'none';
         mainBg.style.backgroundImage = "url('img1.jpg')";
@@ -574,12 +631,20 @@
 
     // Botão "Iniciar Operação" (Tela de Alerta -> Jogo)
     btnStartSim.addEventListener('click', () => {
-        // Para a notícia
-        audioNews.pause();
-        
-        // Toca som do jogo
-        audioGame.currentTime = 0;
-        audioGame.play().catch(e => console.error("Audio game error:", e));
+        // Troca de estágio
+        currentStage = 'game';
+
+        // Não pausa audioGame — se estiver tocando, mantemos
+        if (audioGame.paused) {
+            // tenta continuar tocando (isso só ocorrerá se autoplay foi bloqueado antes)
+            audioGame.currentTime = 0;
+            audioGame.play().then(() => updatePlayButtonUI(true)).catch(e => {
+                console.error("Audio game error ao iniciar operação:", e);
+                updatePlayButtonUI(false);
+            });
+        } else {
+            updatePlayButtonUI(true);
+        }
 
         introScreen.style.transition = "opacity 1s";
         introScreen.style.opacity = '0';
