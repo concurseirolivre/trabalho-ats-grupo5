@@ -41,7 +41,7 @@
             filter: brightness(0.3) contrast(1.2) blur(2px);
         }
 
-        /* EFEITOS VISUAIS */
+        /* --- EFEITOS VISUAIS --- */
         #disaster-layer {
             position: fixed;
             top: 0;
@@ -78,10 +78,12 @@
         }
 
         @keyframes rain-fall { to { transform: translateY(120vh); } }
-        @keyframes rise { 
+        
+        @keyframes rise {
             0% { transform: translateY(0) scale(1); opacity: 0.8; }
             100% { transform: translateY(-80vh) scale(0); opacity: 0; }
         }
+
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(1px, 0, 0); }
@@ -160,7 +162,7 @@
             height: 100%;
             background-color: rgba(0,0,0,0.9);
             z-index: 2000;
-            display: none; /* Começa oculta */
+            display: none; /* Começa oculto */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -347,7 +349,7 @@
 
     function startDisasterEffect(type) {
         disasterLayer.style.display = 'block';
-        disasterLayer.innerHTML = ''; // Limpa
+        disasterLayer.innerHTML = ''; 
         clearInterval(disasterInterval);
 
         if (type === 'rain') {
@@ -397,39 +399,39 @@
     const prologueData = [
         {
             title: "INÍCIO",
-            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio ou uma enchente — o caos domina os primeiros minutos.\n\nMas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre.\"",
+            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio, um acidente químico ou uma enchente — o caos domina os primeiros minutos. Mas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre, desde os primeiros passos até as situações mais complexas.\"",
             img: "https://www.pragmatismopolitico.com.br/wp-content/uploads/2018/05/acidente-cuba-e1527030296940.jpg",
             audio: "audio1.mp3",
             effectType: 'rain'
         },
         {
             title: "O PAPEL DO MÉDICO",
-            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta.\n\nO médico precisa entender fisiologia, toxicologia e epidemiologia. É aqui que entram conceitos como triagem, manejo de vias aéreas e tomada de decisão rápida quando não há recursos para todos.\"",
+            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta do sistema de saúde. E, nesse contexto, o médico assume papéis que vão muito além do consultório. Ele precisa entender fisiologia, toxicologia, epidemiologia e, principalmente, como priorizar vidas quando não há recursos para todos. \n\nÉ aqui que entram conceitos como triagem, manejo inicial das vias aéreas, controle de hemorragias e tomada de decisão rápida.\"",
             img: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=1920&q=80",
             audio: "audio2.mp3"
         },
         {
             title: "TRIAGEM (MÉTODO START)",
-            text: "\"A triagem é o coração da resposta médica. É nela que o médico define quem precisa de intervenção imediata.\n\nO método START baseia-se em:\n• Respiração (>30rpm = Vermelho)\n• Perfusão (>2s = Choque)\n• Estado mental (Não obedece comandos = Hipóxia)\"",
+            text: "\"A triagem é o coração da resposta médica. É nela que o médico define quem precisa de intervenção imediata, quem pode esperar e quem, infelizmente, não tem chance real de sobrevivência dado o cenário.\n\nO método START baseia-se em:\n• Respiração – Se a vítima não respira após reposicionamento das vias aéreas, é classificada como preta. Se respira >30 incursões por minuto, é vermelha.)\n• Perfusão – Tempo de enchimento capilar >2 segundos sugere choque hipovolêmico pela perda aguda de volume.)\n• Estado mental – Incapacidade de seguir comandos indica possível hipóxia ou perfusão cerebral inadequada.)\"",
             img: "https://images.unsplash.com/photo-1516574187841-69301976e49e?auto=format&fit=crop&w=1920&q=80",
             audio: "audio3.mp3"
         },
         {
             title: "SITUAÇÕES SIMPLES",
-            text: "\"A maioria das demandas são simples: ferimentos leves, ansiedade, desidratação.\n\nO médico atua como estabilizador: hidratação oral, suturas, analgésicos e controle de hipertensão por estresse em vulneráveis.\"",
+            text: "\"Mesmo nos desastres, a maior parte das demandas médicas são simples: ferimentos leves, crises de ansiedade, desidratação, hipoglicemia.\n\nNesses casos, o médico atua como estabilizador: faz hidratação oral, sutura lacerações, prescreve analgésicos, controla picos hipertensivos induzidos por estresse e monitora pessoas vulneráveis, como gestantes e crianças.\"",
             img: "https://www.saude.sp.gov.br/resources/hospital-leonor-mendes-de-barros/acesso-rapido/primeiros-socorros-em-caso-de-incendio.jpg",
             audio: "audio4.mp3"
         },
         {
             title: "ALTA COMPLEXIDADE",
-            text: "\"Em incêndios: Intoxicação por monóxido de carbono.\nEm deslizamentos: Síndrome do Esmagamento (liberação de mioglobina e potássio, risco renal e arritmias).\n\nDecisões baseadas em fisiologia e protocolos.\"",
+            text: "\"Em outros cenários, o médico enfrenta quadros críticos. Em incêndios, por exemplo, a prioridade é tratar hipoxemia e intoxicação por monóxido de carbono — que compete com o O₂ pela hemoglobina, causando hipóxia tecidual.\nEm deslizamentos, o risco é a síndrome do esmagamento, marcada por liberação de potássio e mioglobina para o sangue, podendo causar arritmias fatais e lesão renal aguda.).\n\nEm acidentes químicos, a conduta envolve descontaminação, neutralização e uso de antídotos específicos, como atropina e pralidoxima nos organofosforados.\n\nDecisões baseadas em fisiologia e protocolos.\"",
             img: "https://ogimg.infoglobo.com.br/in/23946251-8e9-d10/FT1086A/GettyImages-56441651.jpg",
             audio: "audio5.mp3",
             effectType: 'fire'
         },
         {
             title: "LOGÍSTICA E LIDERANÇA",
-            text: "\"O médico coordena fluxos e conversa com bombeiros e defesa civil.\n\nNo abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação e controle da água.\"",
+            text: "\"O médico também coordena equipes, solicita apoio, organiza fluxos de evacuação e adapta o cuidado conforme os recursos disponíveis.\n\nÉ ele quem conversa com bombeiros, defesa civil, enfermagem e motoristas de resgate para garantir que ninguém fique sem assistência. \n\n E, no abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação e controle da água.\"",
             img: "https://cdn.folhape.com.br/img/c/1200/900/dn_arquivo/2020/01/medico1.jpg",
             audio: "audio6.mp3"
         },
@@ -444,14 +446,13 @@
     let currentPrologueIndex = 0;
     let isFirstInteraction = true;
 
-    // --- LÓGICA DO PRÓLOGO ---
     function updatePrologue() {
         const data = prologueData[currentPrologueIndex];
         document.getElementById('prologue-title').innerText = data.title;
         document.getElementById('prologue-text').innerText = data.text;
         mainBg.style.backgroundImage = `url('${data.img}')`;
 
-        // Efeitos
+        // Efeitos Visuais
         if (data.effectType) {
             startDisasterEffect(data.effectType);
         } else {
@@ -471,7 +472,7 @@
             btnNext.style.color = "#2196F3";
         }
 
-        // Se não é a primeira interação, toca o áudio
+        // Áudio: Se já houve interação, toca o áudio do slide
         if (!isFirstInteraction && data.audio) {
             changeAudioTrack(data.audio);
         }
@@ -482,55 +483,57 @@
         audioPrologue.src = sourceUrl;
         audioPrologue.load();
         
-        // Atualiza botão para estado "Tocando"
+        // Atualiza texto do botão
         btnPlayPause.innerText = "🔊 Pausar Narração";
         
         audioPrologue.play().catch(e => {
-            console.log("Autoplay blocked (User needs to interact first)");
-            btnPlayPause.innerText = "🔇 Tocar Narração";
+            console.log("Autoplay bloqueado");
+            btnPlayPause.innerText = "🔇 (Clique para ouvir)";
         });
     }
 
-    // --- EVENTOS DE CLIQUE ---
+    // --- BOTÕES ---
     
-    // Botão Próximo / IR PARA AÇÃO
+    // BOTÃO PRÓXIMO
     btnNext.addEventListener('click', () => {
-        // Desbloqueio inicial
+        // Primeiro clique libera áudio no navegador e carrega o audio da notícia
         if(isFirstInteraction) {
             isFirstInteraction = false;
+            audioNews.load(); // Pré-carrega notícia
+            audioGame.load(); // Pré-carrega jogo
             if(prologueData[currentPrologueIndex].audio) {
                 changeAudioTrack(prologueData[currentPrologueIndex].audio);
             }
         }
 
         if (currentPrologueIndex < prologueData.length - 1) {
-            // Avança Slide
             currentPrologueIndex++;
             updatePrologue();
         } else {
-            // FIM DO PRÓLOGO -> VAI PARA A TELA DE ALERTA
-            
-            // 1. Para efeitos e áudio do prólogo
+            // FIM DO PRÓLOGO -> VAI PARA TELA DE ATENÇÃO
             stopDisasterEffect();
             audioPrologue.pause(); 
-
-            // 2. INICIA O AUDIO DA NOTICIA IMEDIATAMENTE (Aqui é o ponto chave)
+            
+            // *** AQUI: TOCA A NOTÍCIA IMEDIATAMENTE ***
             audioNews.currentTime = 0;
-            audioNews.play().catch(e => console.error("Erro audio noticia:", e));
-
-            // 3. Mostra a tela de alerta
+            audioNews.play().catch(e => console.error("Erro play audio noticia:", e));
+            
             showIntroScreen();
         }
     });
 
+    // BOTÃO ANTERIOR
     btnPrev.addEventListener('click', () => {
         if (currentPrologueIndex > 0) {
             currentPrologueIndex--;
+            if(prologueData[currentPrologueIndex].audio) {
+                changeAudioTrack(prologueData[currentPrologueIndex].audio);
+            }
             updatePrologue();
         }
     });
 
-    // Botão de Play/Pause
+    // BOTÃO PLAY/PAUSE
     btnPlayPause.addEventListener('click', () => {
         if (isFirstInteraction) {
             isFirstInteraction = false;
@@ -547,7 +550,9 @@
         }
     });
 
-    // --- TRANSIÇÃO: PRÓLOGO -> ALERTA ---
+
+    // --- TRANSIÇÕES ---
+
     function showIntroScreen() {
         prologueContainer.style.display = 'none';
         mainBg.style.backgroundImage = "url('img1.jpg')";
@@ -559,15 +564,13 @@
         }, 50);
     }
 
-    // --- TRANSIÇÃO: ALERTA -> JOGO ---
     btnStartSim.addEventListener('click', () => {
-        
-        // Para a notícia
+        // PARA NOTÍCIA
         audioNews.pause();
         
-        // Começa o som do jogo
+        // INICIA SOM DO JOGO
         audioGame.currentTime = 0;
-        audioGame.play().catch(e => console.error("Audio game auto-play:", e));
+        audioGame.play().catch(e => console.error("Erro audio game:", e));
 
         introScreen.style.transition = "opacity 1s";
         introScreen.style.opacity = '0';
@@ -575,7 +578,6 @@
         setTimeout(() => {
             introScreen.style.display = 'none';
             gameContainer.style.display = 'flex';
-            
             setTimeout(() => {
                 gameContainer.style.opacity = '1';
                 gameContainer.style.animation = 'fadeIn 1s ease-out';
@@ -584,8 +586,7 @@
         }, 1000);
     });
 
-
-    // --- 4. MOTOR DO JOGO ---
+    // --- MOTOR DO JOGO ---
     const story = {
         "start": {
             text: "[06:05] CONEXÃO ESTABELECIDA COM POSTO DE COMANDO...\n\nO deslizamento acabou de acontecer. A repórter confirmou o caos local. Você é o Coordenador Médico.\n\nRecursos limitados. Vidas em risco.\n\nSua primeira decisão definirá toda a operação. Qual sua prioridade?",
@@ -730,7 +731,6 @@
         }, 100);
     }
 
-    // INICIALIZAR
     updatePrologue();
 </script>
 </body>
