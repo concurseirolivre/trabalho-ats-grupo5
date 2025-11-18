@@ -18,83 +18,104 @@
             justify-content: center;
         }
 
-        /* Fundo */
-        .background {
+        /* Fundo do Prólogo (Muda dinamicamente) */
+        .background-prologue {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('img1.jpg'); /* Certifique-se que a imagem está na pasta */
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4) contrast(1.1);
+            z-index: -2;
+            transition: background-image 1s ease-in-out;
+        }
+
+        /* Fundo do Jogo (Fixo) */
+        .background-game {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('img1.jpg'); /* Imagem do jogo */
             background-size: cover;
             background-position: center;
             filter: brightness(0.3) contrast(1.2) blur(2px);
-            z-index: -1;
+            z-index: -3;
+            display: none;
         }
 
-        /* --- TELA DE INTRODUÇÃO (AUDIO) --- */
-        #intro-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            z-index: 9999;
+        /* --- TELA DE PRÓLOGO (NOVO) --- */
+        #prologue-container {
+            width: 90%;
+            max-width: 900px;
+            background-color: rgba(10, 10, 15, 0.9);
+            border: 1px solid #444;
+            border-top: 5px solid #2196F3; /* Azul da Medicina/Ciência */
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-align: center;
-            transition: opacity 1s ease-out;
+            z-index: 10;
+            animation: fadeIn 1s;
         }
 
-        #intro-content h1 {
-            color: #d32f2f;
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
-            animation: pulse 2s infinite;
-        }
-
-        /* Botão Principal de Início */
-        #btn-start-audio {
-            background: transparent;
-            border: 2px solid #d32f2f;
-            color: #d32f2f;
-            padding: 15px 40px;
+        #prologue-title {
+            color: #2196F3;
             font-size: 1.5em;
-            font-family: inherit;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: all 0.3s;
-        }
-        #btn-start-audio:hover {
-            background-color: #d32f2f;
-            color: #fff;
-            box-shadow: 0 0 20px #d32f2f;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            width: 100%;
         }
 
-        /* Mensagem de Status */
-        #status-msg {
-            margin-top: 20px;
-            color: #888;
+        #prologue-text {
             font-size: 1.2em;
-            min-height: 1.5em;
+            line-height: 1.8;
+            min-height: 200px;
+            white-space: pre-wrap;
+            margin-bottom: 30px;
+            text-align: left;
         }
 
-        /* Botão de Emergência (Pular) */
-        #btn-skip {
-            margin-top: 50px;
-            background: none;
-            border: none;
-            color: #555;
-            text-decoration: underline;
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .btn-prologue {
+            background: transparent;
+            border: 1px solid #2196F3;
+            color: #2196F3;
+            padding: 10px 30px;
+            font-size: 1em;
             cursor: pointer;
-            font-size: 0.9em;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .btn-prologue:hover {
+            background: #2196F3;
+            color: white;
         }
 
-        /* --- O JOGO --- */
+        /* --- JOGO (Escondido Inicialmente) --- */
+        #game-ui {
+            display: none; /* Começa escondido */
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
         #game-container {
             width: 80%;
             max-width: 800px;
@@ -105,16 +126,15 @@
             padding: 40px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
             min-height: 400px;
-            display: none; 
+            display: flex;
             flex-direction: column;
-            /* Removi o justify-content space-between para o conteúdo fluir melhor de cima para baixo */
             opacity: 0;
         }
 
         .header {
             border-bottom: 1px solid #555;
             padding-bottom: 10px;
-            margin-bottom: 20px; /* Espaço entre cabeçalho e feedback */
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             font-size: 0.9em;
@@ -122,22 +142,9 @@
         }
         .status-blink { color: #d32f2f; font-weight: bold; animation: blink 1s infinite; }
         
-        #story-text { 
-            font-size: 1.2em; 
-            line-height: 1.6; 
-            white-space: pre-wrap; 
-            min-height: 100px; /* Reduzi um pouco a altura mínima */
-        }
+        #story-text { font-size: 1.2em; line-height: 1.6; white-space: pre-wrap; min-height: 100px; }
 
-        /* Feedback Visual (MOVIDO PARA O TOPO) */
-        #feedback-area { 
-            margin-bottom: 20px; /* Margem em baixo para separar do texto */
-            font-weight: bold; 
-            padding: 15px; 
-            border-radius: 4px; 
-            display: none; 
-            font-size: 1.1em;
-        }
+        #feedback-area { margin-bottom: 20px; font-weight: bold; padding: 15px; border-radius: 4px; display: none; font-size: 1.1em; }
         .feedback-success { background-color: rgba(46, 125, 50, 0.2); border: 1px solid #2e7d32; color: #81c784; }
         .feedback-error { background-color: rgba(198, 40, 40, 0.2); border: 1px solid #c62828; color: #e57373; }
 
@@ -147,102 +154,182 @@
         .cursor { display: inline-block; width: 10px; height: 1em; background-color: #0f0; animation: blink 1s infinite; vertical-align: bottom; }
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="background"></div>
+    <div class="background-prologue" id="bg-prologue"></div>
+    <div class="background-game" id="bg-game"></div>
 
-    <div id="intro-overlay">
-        <div id="intro-content">
-            <h1>PLANTÃO URGENTE</h1>
-            <p>Simulação de Desastre Ambiental - Grupo 5</p>
+    <audio id="audio-prologue" src="narracao_prologo.mp3" preload="auto"></audio>
+    
+    <audio id="audio-game" src="audio.mp3" preload="auto"></audio>
+
+
+    <div id="prologue-container">
+        <div id="prologue-title">INTRODUÇÃO TÉCNICA</div>
+        <div id="prologue-text"></div>
+        
+        <div class="nav-buttons">
+            <button class="btn-prologue" id="btn-prev-prologue" style="visibility: hidden;">Anterior</button>
             
-            <button id="btn-start-audio">INICIAR TRANSMISSÃO</button>
-            <div id="status-msg"></div>
+            <div style="font-size: 0.8em; color: #666; display: flex; align-items: center; gap: 10px;">
+                <span id="audio-status">🔈 Áudio Pausado</span>
+                <button class="btn-prologue" onclick="togglePrologueAudio()" style="padding: 5px 10px;">⏯️ Play/Pause</button>
+            </div>
 
-            <button id="btn-skip" onclick="startGame(true)">[Pular intro e ir para o jogo]</button>
+            <button class="btn-prologue" id="btn-next-prologue">Próximo ➜</button>
         </div>
     </div>
 
-    <audio id="narracao" src="audio.mp3" preload="auto"></audio>
 
-    <div id="game-container">
-        <div class="header">
-            <span>SALA DE SITUAÇÃO: GRUPO 5</span>
-            <span class="status-blink">● AO VIVO - PETRÓPOLIS</span>
+    <div id="game-ui">
+        <div id="game-container">
+            <div class="header">
+                <span>SALA DE SITUAÇÃO: GRUPO 5</span>
+                <span class="status-blink">● AO VIVO - PETRÓPOLIS</span>
+            </div>
+
+            <div id="feedback-area"></div>
+
+            <div id="text-container">
+                <span id="story-text"></span><span class="cursor"></span>
+            </div>
+            
+            <div id="choices-container" class="choices"></div>
         </div>
-
-        <div id="feedback-area"></div>
-
-        <div id="text-container">
-            <span id="story-text"></span><span class="cursor"></span>
-        </div>
-        
-        <div id="choices-container" class="choices"></div>
     </div>
 
 <script>
-    // --- LÓGICA E CONTROLES ---
-    const introOverlay = document.getElementById('intro-overlay');
-    const btnStartAudio = document.getElementById('btn-start-audio');
-    const statusMsg = document.getElementById('status-msg');
-    const audioPlayer = document.getElementById('narracao');
-    const gameContainer = document.getElementById('game-container');
+    // --- DADOS DO PRÓLOGO (Seu texto e imagens) ---
+    const prologueData = [
+        {
+            title: "0:00 - ABERTURA",
+            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio ou uma enchente — o caos domina os primeiros minutos.\n\nMas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre.\"",
+            img: "https://images.unsplash.com/photo-1565582532664-5051c19df165?auto=format&fit=crop&w=1920&q=80" // Imagem: Caos/Luzes
+        },
+        {
+            title: "0:20 - O PAPEL DO MÉDICO",
+            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta.\n\nO médico precisa entender fisiologia, toxicologia e epidemiologia. É aqui que entram conceitos como triagem, manejo de vias aéreas e tomada de decisão rápida quando não há recursos para todos.\"",
+            img: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=1920&q=80" // Imagem: Mapa/Planejamento
+        },
+        {
+            title: "1:00 - TRIAGEM (MÉTODO START)",
+            text: "\"A triagem é o coração da resposta. Definimos quem precisa de intervenção imediata.\n\nO método START baseia-se em:\n• Respiração (>30rpm = Vermelho)\n• Perfusão (>2s = Choque)\n• Estado mental (Não obedece comandos = Hipóxia)\"",
+            img: "https://images.unsplash.com/photo-1516574187841-69301976e49e?auto=format&fit=crop&w=1920&q=80" // Imagem: Triage/Médicos
+        },
+        {
+            title: "2:00 - SITUAÇÕES SIMPLES",
+            text: "\"A maioria das demandas são simples: ferimentos leves, ansiedade, desidratação.\n\nO médico atua como estabilizador: hidratação oral, suturas, analgésicos e controle de hipertensão por estresse em vulneráveis.\"",
+            img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1920&q=80" // Imagem: Curativo/Cuidado
+        },
+        {
+            title: "2:40 - ALTA COMPLEXIDADE",
+            text: "\"Em incêndios: Intoxicação por monóxido de carbono.\nEm deslizamentos: Síndrome do Esmagamento (liberação de mioglobina e potássio, risco renal e arritmias).\n\nDecisões baseadas em fisiologia e protocolos.\"",
+            img: "https://images.unsplash.com/photo-1605218427368-412e96e529b2?auto=format&fit=crop&w=1920&q=80" // Imagem: Ambulância/Resgate
+        },
+        {
+            title: "3:30 - LOGÍSTICA E LIDERANÇA",
+            text: "\"O médico coordena fluxos e conversa com bombeiros e defesa civil.\n\nNo abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação e controle da água.\"",
+            img: "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=1920&q=80" // Imagem: Reunião/Liderança
+        },
+        {
+            title: "4:15 - A ESSÊNCIA",
+            text: "\"No fim, atuar em um desastre é equilibrar ciência, humanidade e estratégia.\n\nA medicina nesses cenários não é apenas técnica; é também coragem e organização quando tudo ao redor parece ter ruído.\"",
+            img: "https://images.unsplash.com/photo-1504439904031-93ded9f93e4e?auto=format&fit=crop&w=1920&q=80" // Imagem: Destruição/Esperança
+        }
+    ];
+
+    // --- VARIÁVEIS DO SISTEMA ---
+    let currentPrologueIndex = 0;
+    const prologueContainer = document.getElementById('prologue-container');
+    const bgPrologue = document.getElementById('bg-prologue');
+    const bgGame = document.getElementById('bg-game');
+    const gameUI = document.getElementById('game-ui');
+    const audioPrologue = document.getElementById('audio-prologue');
+    const audioGame = document.getElementById('audio-game');
     
-    let gameStarted = false;
+    // --- FUNÇÕES DO PRÓLOGO ---
+    function updatePrologue() {
+        const data = prologueData[currentPrologueIndex];
+        document.getElementById('prologue-title').innerText = data.title;
+        document.getElementById('prologue-text').innerText = data.text;
+        
+        // Atualiza imagem de fundo
+        bgPrologue.style.backgroundImage = `url('${data.img}')`;
 
-    btnStartAudio.addEventListener('click', function() {
-        statusMsg.innerText = "Carregando áudio...";
-        statusMsg.style.color = "#FFEB3B";
+        // Botão "Anterior"
+        document.getElementById('btn-prev-prologue').style.visibility = 
+            currentPrologueIndex === 0 ? 'hidden' : 'visible';
+        
+        // Botão "Próximo" vira "INICIAR SIMULAÇÃO" no final
+        const nextBtn = document.getElementById('btn-next-prologue');
+        if (currentPrologueIndex === prologueData.length - 1) {
+            nextBtn.innerText = "INICIAR SIMULAÇÃO ⚠";
+            nextBtn.style.backgroundColor = "#d32f2f";
+            nextBtn.style.color = "white";
+            nextBtn.style.borderColor = "#d32f2f";
+        } else {
+            nextBtn.innerText = "Próximo ➜";
+            nextBtn.style.backgroundColor = "transparent";
+            nextBtn.style.color = "#2196F3";
+            nextBtn.style.borderColor = "#2196F3";
+        }
+    }
 
-        const playPromise = audioPlayer.play();
-
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                btnStartAudio.style.display = 'none';
-                document.getElementById('btn-skip').style.display = 'none';
-                statusMsg.innerText = "📡 Reproduzindo transmissão...";
-                statusMsg.style.color = "#4CAF50";
-            })
-            .catch(error => {
-                console.error("Erro no áudio:", error);
-                alert("ERRO: Não foi possível tocar o áudio 'audio.mp3'.\n\nMotivo: O arquivo pode não estar na pasta ou o nome está errado.\n\nIniciando o jogo sem áudio...");
-                startGame(true); 
-            });
+    document.getElementById('btn-next-prologue').addEventListener('click', () => {
+        if (currentPrologueIndex < prologueData.length - 1) {
+            currentPrologueIndex++;
+            updatePrologue();
+        } else {
+            endPrologueAndStartGame();
         }
     });
 
-    audioPlayer.addEventListener('ended', function() {
-        startGame(false);
+    document.getElementById('btn-prev-prologue').addEventListener('click', () => {
+        if (currentPrologueIndex > 0) {
+            currentPrologueIndex--;
+            updatePrologue();
+        }
     });
 
-    audioPlayer.addEventListener('error', function(e) {
-        console.log("Arquivo de áudio não encontrado.");
-    });
-
-    function startGame(forceImmediate) {
-        if (gameStarted) return;
-        gameStarted = true;
-
-        const delay = forceImmediate ? 0 : 1000;
-        introOverlay.style.opacity = '0';
-        
-        setTimeout(() => {
-            introOverlay.style.display = 'none';
-            gameContainer.style.display = 'flex';
-            
-            setTimeout(() => {
-                gameContainer.style.opacity = '1';
-                gameContainer.style.animation = 'fadeIn 1s ease-out';
-                goTo('start');
-            }, 100);
-        }, delay);
+    function togglePrologueAudio() {
+        if (audioPrologue.paused) {
+            audioPrologue.play();
+            document.getElementById('audio-status').innerText = "🔊 Tocando...";
+        } else {
+            audioPrologue.pause();
+            document.getElementById('audio-status').innerText = "🔇 Pausado";
+        }
     }
 
-    // --- ROTEIRO ---
+    function endPrologueAndStartGame() {
+        // Para o áudio do prólogo se estiver tocando
+        audioPrologue.pause();
+        
+        // Tenta tocar o áudio do jogo (Atmosfera)
+        audioGame.play().catch(e => console.log("Audio game block:", e));
+
+        // Transição Visual
+        prologueContainer.style.display = 'none';
+        bgPrologue.style.opacity = '0';
+        bgGame.style.display = 'block';
+        
+        // Mostra a UI do Jogo
+        gameUI.style.display = 'flex';
+        setTimeout(() => {
+            document.getElementById('game-container').style.opacity = '1';
+            document.getElementById('game-container').style.animation = 'fadeIn 1s ease-out';
+            goTo('start');
+        }, 100);
+    }
+
+    // Inicializa o Prólogo
+    updatePrologue();
+
+
+    // --- MOTOR DO JOGO (Igual ao anterior) ---
     const story = {
         "start": {
             text: "[06:05] CONEXÃO ESTABELECIDA COM POSTO DE COMANDO...\n\nO deslizamento acabou de acontecer. A repórter confirmou o caos local. Você é o Coordenador Médico.\n\nRecursos limitados. Vidas em risco.\n\nSua primeira decisão definirá toda a operação. Qual sua prioridade?",
@@ -338,7 +425,6 @@
         }
     };
 
-    // --- FUNÇÕES DO MOTOR ---
     const textElement = document.getElementById('story-text');
     const choicesContainer = document.getElementById('choices-container');
     const feedbackArea = document.getElementById('feedback-area');
@@ -356,12 +442,12 @@
 
     function goTo(sceneId) {
         const scene = story[sceneId];
-        
         textElement.innerHTML = "";
         choicesContainer.innerHTML = "";
         choicesContainer.style.opacity = "0";
         feedbackArea.style.display = "none";
 
+        // Feedback aparece ANTES do texto agora
         if (scene.feedback) {
             feedbackArea.style.display = "block";
             feedbackArea.className = scene.feedback.type === 'success' ? 'feedback-success' : 'feedback-error';
