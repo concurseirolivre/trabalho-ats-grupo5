@@ -41,7 +41,7 @@
             filter: brightness(0.3) contrast(1.2) blur(2px);
         }
 
-        /* --- CAMADA DE EFEITOS (CHUVA E FOGO) --- */
+        /* --- EFEITOS VISUAIS --- */
         #disaster-layer {
             position: fixed;
             top: 0;
@@ -53,7 +53,7 @@
             display: none;
         }
 
-        /* EFEITO CHUVA */
+        /* Chuva */
         .rain {
             position: absolute;
             background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.5));
@@ -64,12 +64,12 @@
             pointer-events: none;
         }
 
-        /* EFEITO FOGO */
+        /* Fogo */
         .fire-particle {
             position: absolute;
             background: radial-gradient(circle, rgba(255,80,0,0.8) 0%, rgba(255,0,0,0) 70%);
             border-radius: 50%;
-            bottom: -50px; /* Começa de baixo */
+            bottom: -50px;
             pointer-events: none;
             filter: blur(4px);
             mix-blend-mode: screen;
@@ -79,7 +79,6 @@
             animation: shake 3s cubic-bezier(.36,.07,.19,.97) infinite;
         }
 
-        /* ANIMAÇÕES DE PARTÍCULAS */
         @keyframes rain-fall { to { transform: translateY(120vh); } }
         
         @keyframes rise {
@@ -287,6 +286,7 @@
     <div id="disaster-layer"></div>
 
     <audio id="audio-prologue" src="narracao_prologo.mp3" preload="auto"></audio>
+    <audio id="audio-news" src="noticia.mp3" preload="auto"></audio>
     <audio id="audio-game" src="audio.mp3" preload="auto"></audio>
 
     <div id="prologue-container">
@@ -298,7 +298,7 @@
             
             <div style="font-size: 0.8em; color: #aaa; display: flex; align-items: center; gap: 10px;">
                 <span id="audio-status">🔈 Áudio Explicativo</span>
-                <button class="btn-prologue" onclick="togglePrologueAudio()" style="padding: 5px 10px;">⏯️</button>
+                <button class="btn-prologue" id="btn-play-pause" style="padding: 5px 10px;">⏯️</button>
             </div>
 
             <button class="btn-prologue" id="btn-next-prologue">Próximo ➜</button>
@@ -331,27 +331,26 @@
     </div>
 
 <script>
-    // --- VARIÁVEIS GERAIS ---
+    // --- REFERÊNCIAS ---
     const prologueContainer = document.getElementById('prologue-container');
     const introScreen = document.getElementById('intro-screen');
     const gameContainer = document.getElementById('game-container');
     const mainBg = document.getElementById('main-bg');
     const disasterLayer = document.getElementById('disaster-layer');
     const audioPrologue = document.getElementById('audio-prologue');
+    const audioNews = document.getElementById('audio-news');
     const audioGame = document.getElementById('audio-game');
+    const btnPlayPause = document.getElementById('btn-play-pause');
 
-    // --- EFEITOS DE DESASTRE (CHUVA E FOGO) ---
+    // --- EFEITOS ---
     let disasterInterval;
 
     function startDisasterEffect(type) {
         disasterLayer.style.display = 'block';
-        disasterLayer.innerHTML = ''; // Limpa partículas anteriores
-        
-        // Limpa intervalo anterior para não acumular
+        disasterLayer.innerHTML = '';
         clearInterval(disasterInterval);
 
         if (type === 'rain') {
-            // CHUVA
             prologueContainer.classList.add('shake-screen');
             disasterInterval = setInterval(() => {
                 for(let i=0; i<4; i++) {
@@ -366,33 +365,21 @@
                     setTimeout(() => { drop.remove(); }, speed * 1000);
                 }
             }, 50);
-        } 
-        else if (type === 'fire') {
-            // FOGO
-            prologueContainer.classList.remove('shake-screen'); // Tira tremor da chuva
+        } else if (type === 'fire') {
+            prologueContainer.classList.remove('shake-screen');
             disasterInterval = setInterval(() => {
                 for(let i=0; i<3; i++) {
                     const ember = document.createElement('div');
                     ember.className = 'fire-particle';
-                    
-                    // Posição aleatória na base
                     ember.style.left = Math.random() * 100 + 'vw';
-                    
-                    // Tamanho
                     const size = Math.random() * 20 + 5;
                     ember.style.width = size + 'px';
                     ember.style.height = size + 'px';
-                    
-                    // Cor variada entre amarelo e vermelho
                     const color = Math.random() > 0.5 ? 'rgba(255,80,0,0.8)' : 'rgba(255,200,0,0.6)';
                     ember.style.background = `radial-gradient(circle, ${color} 0%, rgba(255,0,0,0) 70%)`;
-
-                    // Velocidade de subida
                     const speed = Math.random() * 1.5 + 1; 
                     ember.style.animation = `rise ${speed}s ease-out forwards`;
-                    
                     disasterLayer.appendChild(ember);
-
                     setTimeout(() => { ember.remove(); }, speed * 1000);
                 }
             }, 80);
@@ -406,50 +393,49 @@
         prologueContainer.classList.remove('shake-screen');
     }
 
-
-    // --- 1. LÓGICA DO PRÓLOGO ---
+    // --- DADOS ---
     const prologueData = [
         {
             title: "INÍCIO",
-            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio, um acidente químico ou uma enchente — o caos domina os primeiros minutos. Mas existe uma lógica médica por trás das decisões que salvam vidas.\"",
+            text: "\"Quando um desastre acontece — seja um deslizamento, um incêndio ou uma enchente — o caos domina os primeiros minutos.\n\nMas existe uma lógica médica por trás das decisões que salvam vidas. Hoje você vai entender como funciona a atuação do médico em cenários de desastre.\"",
             img: "https://www.pragmatismopolitico.com.br/wp-content/uploads/2018/05/acidente-cuba-e1527030296940.jpg",
             audio: "audio1.mp3",
-            effectType: 'rain' // CHUVA AQUI
+            effectType: 'rain'
         },
         {
             title: "O PAPEL DO MÉDICO",
-            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta do sistema de saúde. E, nesse contexto, o médico assume papéis que vão muito além do consultório.\"",
+            text: "\"Um desastre é qualquer evento que ultrapassa a capacidade normal de resposta.\n\nO médico precisa entender fisiologia, toxicologia e epidemiologia. É aqui que entram conceitos como triagem, manejo de vias aéreas e tomada de decisão rápida quando não há recursos para todos.\"",
             img: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=1920&q=80",
             audio: "audio2.mp3"
         },
         {
             title: "TRIAGEM (MÉTODO START)",
-            text: "\"A triagem é o coração da resposta médica. O método START baseia-se em três pontos fisiológicos: Respiração, Perfusão e Estado Mental.\"",
+            text: "\"A triagem é o coração da resposta médica. É nela que o médico define quem precisa de intervenção imediata.\n\nO método START baseia-se em:\n• Respiração (>30rpm = Vermelho)\n• Perfusão (>2s = Choque)\n• Estado mental (Não obedece comandos = Hipóxia)\"",
             img: "https://images.unsplash.com/photo-1516574187841-69301976e49e?auto=format&fit=crop&w=1920&q=80",
             audio: "audio3.mp3"
         },
         {
             title: "SITUAÇÕES SIMPLES",
-            text: "\"Mesmo nos desastres, a maior parte das demandas médicas são simples: ferimentos leves, crises de ansiedade, desidratação, hipoglicemia.\"",
+            text: "\"A maioria das demandas são simples: ferimentos leves, ansiedade, desidratação.\n\nO médico atua como estabilizador: hidratação oral, suturas, analgésicos e controle de hipertensão por estresse em vulneráveis.\"",
             img: "https://www.saude.sp.gov.br/resources/hospital-leonor-mendes-de-barros/acesso-rapido/primeiros-socorros-em-caso-de-incendio.jpg",
             audio: "audio4.mp3"
         },
         {
             title: "ALTA COMPLEXIDADE",
-            text: "\"Em outros cenários, o médico enfrenta quadros críticos. Em incêndios, por exemplo, a prioridade é tratar hipoxemia e intoxicação por monóxido de carbono.\"",
+            text: "\"Em incêndios: Intoxicação por monóxido de carbono.\nEm deslizamentos: Síndrome do Esmagamento (liberação de mioglobina e potássio, risco renal e arritmias).\n\nDecisões baseadas em fisiologia e protocolos.\"",
             img: "https://ogimg.infoglobo.com.br/in/23946251-8e9-d10/FT1086A/GettyImages-56441651.jpg",
             audio: "audio5.mp3",
-            effectType: 'fire' // FOGO AQUI
+            effectType: 'fire'
         },
         {
             title: "LOGÍSTICA E LIDERANÇA",
-            text: "\"O médico também coordena equipes, solicita apoio, organiza fluxos de evacuação e adapta o cuidado conforme os recursos disponíveis.\"",
+            text: "\"O médico coordena fluxos e conversa com bombeiros e defesa civil.\n\nNo abrigo, o trabalho continua: vigilância epidemiológica, prevenção de surtos, vacinação e controle da água.\"",
             img: "https://cdn.folhape.com.br/img/c/1200/900/dn_arquivo/2020/01/medico1.jpg",
             audio: "audio6.mp3"
         },
         {
             title: "A ESSÊNCIA",
-            text: "\"No fim, atuar em um desastre é equilibrar ciência, humanidade e estratégia. A medicina nesses cenários não é apenas técnica; exige também coragem.\"",
+            text: "\"No fim, atuar em um desastre é equilibrar ciência, humanidade e estratégia.\n\nA medicina nesses cenários não é apenas técnica; exige também coragem e organização quando tudo ao redor parece destruído.\"",
             img: "https://blog.unyleyamed.com.br/wp-content/uploads/2023/09/shutterstock_661890763-scaled.webp",
             audio: "audio7.mp3"
         }
@@ -464,7 +450,6 @@
         document.getElementById('prologue-text').innerText = data.text;
         mainBg.style.backgroundImage = `url('${data.img}')`;
 
-        // Lógica dos Efeitos (Chuva ou Fogo)
         if (data.effectType) {
             startDisasterEffect(data.effectType);
         } else {
@@ -485,7 +470,6 @@
             nextBtn.style.color = "#2196F3";
         }
 
-        // Troca de Áudio
         if (!isFirstInteraction && data.audio) {
             changeAudioTrack(data.audio);
         }
@@ -495,9 +479,17 @@
         audioPrologue.pause();
         audioPrologue.src = sourceUrl;
         audioPrologue.load();
-        audioPrologue.play().catch(e => console.log("Audio auto-play blocked (ok if first load)"));
+        audioPrologue.play()
+            .then(() => {
+                document.getElementById('audio-status').innerText = "🔊 Tocando...";
+            })
+            .catch(e => {
+                console.log("Autoplay blocked");
+                document.getElementById('audio-status').innerText = "🔇 (Clique no Play)";
+            });
     }
 
+    // --- BOTÕES DO PRÓLOGO ---
     document.getElementById('btn-next-prologue').addEventListener('click', () => {
         if(isFirstInteraction) {
             isFirstInteraction = false;
@@ -511,7 +503,7 @@
             updatePrologue();
         } else {
             stopDisasterEffect();
-            showIntroScreen();
+            showIntroScreen(); // VAI PARA A TELA DE ATENÇÃO
         }
     });
 
@@ -525,7 +517,8 @@
         }
     });
 
-    function togglePrologueAudio() {
+    // Botão de Play/Pause corrigido
+    btnPlayPause.addEventListener('click', () => {
         if (isFirstInteraction) {
             isFirstInteraction = false;
             changeAudioTrack(prologueData[currentPrologueIndex].audio);
@@ -538,15 +531,15 @@
             audioPrologue.pause();
             document.getElementById('audio-status').innerText = "🔇 Pausado";
         }
-    }
+    });
 
 
-    // --- 2. TRANSIÇÃO PARA TELA DE ALERTA ---
+    // --- 2. TRANSIÇÃO PARA TELA DE ALERTA (ATENÇÃO) ---
     function showIntroScreen() {
-        audioPrologue.pause();
-        
-        // TOCA O ÁUDIO DA NOTÍCIA (noticia.mp3)
-        const audioNews = new Audio('noticia.mp3');
+        audioPrologue.pause(); // Para o áudio do slide
+
+        // AGORA SIM: Toca a NOTÍCIA quando entra na tela de Atenção
+        audioNews.currentTime = 0;
         audioNews.play().catch(e => console.error("Erro audio noticia:", e));
 
         prologueContainer.style.display = 'none';
@@ -557,9 +550,6 @@
         setTimeout(() => {
             introScreen.style.opacity = '1';
         }, 50);
-        
-        // Guardamos a referência para parar depois
-        window.currentNewsAudio = audioNews;
     }
 
 
@@ -567,9 +557,9 @@
     document.getElementById('btn-start-simulation').addEventListener('click', () => {
         
         // Para a notícia
-        if(window.currentNewsAudio) window.currentNewsAudio.pause();
-
-        // Toca áudio do jogo
+        audioNews.pause();
+        
+        // Começa o som do jogo
         audioGame.currentTime = 0;
         audioGame.play().catch(e => console.error("Audio game auto-play:", e));
 
@@ -587,6 +577,7 @@
             }, 100);
         }, 1000);
     });
+
 
     // --- 4. MOTOR DO JOGO ---
     const story = {
@@ -733,6 +724,7 @@
         }, 100);
     }
 
+    // INICIALIZAR
     updatePrologue();
 </script>
 </body>
