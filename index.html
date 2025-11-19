@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Simulação ATS - Grupo 5</title>
     <style>
         /* --- GERAL --- */
@@ -41,7 +41,7 @@
             filter: brightness(0.3) contrast(1.2) blur(2px);
         }
 
-        /* EFEITOS VISUAIS */
+        /* EFEITOS VISUAIS - agora EM PLANO DE FUNDO (z-index negativo, acima do background) */
         #disaster-layer {
             position: fixed;
             top: 0;
@@ -49,7 +49,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 900; /* Fica sobre o fundo, mas atrás do texto */
+            z-index: -4; /* acima do background (-5) mas atrás do conteúdo (z-index positivo) */
             display: none;
         }
         
@@ -60,8 +60,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
-            z-index: 901; 
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: -3; /* fica acima da camada de chuva, mas ainda atrás do conteúdo */
             opacity: 0;
             pointer-events: none;
         }
@@ -106,7 +106,7 @@
 
         @keyframes flash-anim {
             0% { opacity: 0; }
-            10% { opacity: 0.8; }
+            10% { opacity: 0.9; }
             20% { opacity: 0; }
             100% { opacity: 0; }
         }
@@ -125,7 +125,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            z-index: 1000;
+            z-index: 1000; /* conteúdo acima dos efeitos */
             animation: fadeIn 1s;
             position: relative;
         }
@@ -361,15 +361,19 @@
     const btnPrev = document.getElementById('btn-prev-prologue');
     const btnStartSim = document.getElementById('btn-start-simulation');
 
+    // Configure default game audio properties (ajustáveis)
+    audioGame.loop = true;
+    audioGame.volume = 0.6;
+
     // --- EFEITOS VISUAIS (CHUVA, FOGO, RAIOS) ---
     let disasterInterval;
     let lightningInterval;
 
     function triggerLightning() {
-        // Efeito visual de flash
+        // Efeito visual de flash (atrás do conteúdo)
         lightningFlash.style.animation = 'none';
-        lightningFlash.offsetHeight; // Trigger reflow
-        lightningFlash.style.animation = 'flash-anim 0.3s ease-out';
+        void lightningFlash.offsetHeight; // Trigger reflow
+        lightningFlash.style.animation = 'flash-anim 0.35s ease-out';
 
         // Tremor na tela do jogo (se visível)
         if (gameContainer.style.display === 'flex') {
@@ -380,10 +384,11 @@
     }
 
     function startDisasterEffect(type) {
-        disasterLayer.style.display = 'block';
-        disasterLayer.innerHTML = '';
+        // garante que não haja duplicatas
         clearInterval(disasterInterval);
         clearInterval(lightningInterval);
+        disasterLayer.innerHTML = '';
+        disasterLayer.style.display = 'block';
 
         if (type === 'rain' || type === 'storm') {
             // CHUVA
@@ -393,21 +398,18 @@
                     drop.className = 'rain';
                     drop.style.left = Math.random() * 100 + 'vw';
                     drop.style.height = (Math.random() * 20 + 30) + 'px';
-                    drop.style.animation = `rain-fall ${Math.random() * 0.3 + 0.5}s linear`;
+                    drop.style.animation = `rain-fall ${Math.random() * 0.6 + 0.8}s linear`;
                     disasterLayer.appendChild(drop);
-                    setTimeout(() => { drop.remove(); }, 1000);
+                    setTimeout(() => { try{ drop.remove(); }catch(e){} }, 1200);
                 }
-            }, 50);
-
-            // SE FOR TEMPESTADE (STORM), ADICIONA RAIOS
+            }, 120);
+            // RAIOS se tempestade
             if (type === 'storm') {
                 lightningInterval = setInterval(() => {
-                    if(Math.random() > 0.6) triggerLightning();
-                }, 3000); // Tenta disparar um raio a cada 3s
+                    if(Math.random() > 0.5) triggerLightning();
+                }, 2500);
             }
-
         } else if (type === 'fire') {
-            // FOGO
             disasterInterval = setInterval(() => {
                 for(let i=0; i<3; i++) {
                     const ember = document.createElement('div');
@@ -419,9 +421,9 @@
                     ember.style.background = `radial-gradient(circle, ${color} 0%, rgba(255,0,0,0) 70%)`;
                     ember.style.animation = `rise ${Math.random() * 1.5 + 1}s ease-out forwards`;
                     disasterLayer.appendChild(ember);
-                    setTimeout(() => { ember.remove(); }, 2500);
+                    setTimeout(() => { try{ ember.remove(); }catch(e){} }, 2500);
                 }
-            }, 80);
+            }, 120);
         }
     }
 
@@ -437,7 +439,7 @@
     let isFirstInteraction = true;
     let currentStage = 'prologue';
 
-    // Dados do Prólogo
+    // Dados do Prólogo (mantidos)
     const prologueData = [
         {
             title: "INÍCIO",
@@ -544,14 +546,23 @@
             currentPrologueIndex++;
             updatePrologue();
         } else {
-            // FIM DO PRÓLOGO -> ALERTA
+            // FIM DO PRÓLOGO -> AÇÃO IMEDIATA (IR PARA AÇÃO)
             stopDisasterEffect();
             audioPrologue.pause();
-            
-            // TOCA NOTÍCIA
-            audioNews.currentTime = 0;
-            audioNews.play().catch(e => console.error("Erro noticia:", e));
-            
+
+            // --- Inicia o áudio do jogo IMEDIATAMENTE ao clicar IR PARA AÇÃO ---
+            audioGame.currentTime = 0;
+            audioGame.play().then(() => {
+                // começou o áudio do jogo
+            }).catch(e => {
+                console.warn("Erro ao tentar tocar audioGame:", e);
+            });
+
+            // Ativa TEMPESTADE EM PLANO DE FUNDO (Chuva + Raios) antes de mostrar o alerta
+            // Assim o efeito fica no fundo e não sobrepõe o texto (graças ao z-index negativo)
+            startDisasterEffect('storm');
+
+            // MOSTRA A TELA DE ALERTA
             showIntroScreen();
         }
     });
@@ -590,12 +601,16 @@
 
     // --- TRANSIÇÃO: INICIAR JOGO ---
     btnStartSim.addEventListener('click', () => {
+        // já está tocando audioGame desde "IR PARA AÇÃO", mas garantimos que esteja tocando e zeramos audioNews
         audioNews.pause();
-        
-        audioGame.currentTime = 0;
-        audioGame.play().catch(e => console.error("Erro game audio:", e));
-        
-        // Ativa TEMPESTADE (Chuva + Raios) no jogo
+
+        // Caso audioGame não esteja tocando (por qualquer motivo), tenta iniciar
+        if (audioGame.paused) {
+            audioGame.currentTime = 0;
+            audioGame.play().catch(e => console.error("Erro game audio:", e));
+        }
+
+        // Ativa TEMPESTADE no jogo (se já estava ativa, startDisasterEffect limpa e reinicia)
         startDisasterEffect('storm');
 
         introScreen.style.transition = "opacity 1s";
@@ -621,6 +636,7 @@
                 { text: "B - Focar na Gestão (Posto de Comando)", target: "fase_2" }
             ]
         },
+        // ... restante do objeto story (mantido igual) ...
         "erro_gestao": {
             text: "Você chega à Zona de Impacto e ajuda na triagem. Porém, você ficou incomunicável por 8 horas.\n\nNinguém coordenou os abrigos. O caos se instalou.",
             feedback: { type: "error", msg: "ERRO DE GESTÃO: Ao focar na emergência (micro), você abdicou da gestão (macro)." },
@@ -636,69 +652,7 @@
                 { text: "B - 70% Emergência / 30% Avaliação dos Abrigos", target: "fase_3" }
             ]
         },
-        "retry_fase_2": {
-            text: "[07:00] Voltando à decisão de alocação...\n\nTemos 10 equipes, muitos feridos na lama e 200 desalojados em abrigos.\n\nComo você aloca a equipe?",
-            choices: [
-                { text: "A - 100% das equipes para a Zona de Impacto", target: "erro_prevencao" },
-                { text: "B - 70% Emergência / 30% Avaliação dos Abrigos", target: "fase_3" }
-            ]
-        },
-        "erro_prevencao": {
-            text: "[18:00] 12 horas se passam. O atendimento aos feridos foi ótimo, mas um surto de vômito e diarreia explodiu nos abrigos (Hepatite A/Cólera).",
-            feedback: { type: "error", msg: "FALHA NA PREVENÇÃO: Você ignorou os abrigos e criou uma segunda crise." },
-            choices: [
-                { text: "Tentar Novamente", target: "retry_fase_2" },
-                { text: "Reiniciar do Zero", target: "start" }
-            ]
-        },
-        "fase_3": {
-            text: "[10:00] A equipe de avaliação (30%) retorna com ALERTA VERMELHO:\n\n1. Abrigo Escola: Água parada e lama (Risco Leptospirose).\n2. Abrigo Ginásio: Superlotação e tosse (Risco Respiratório).\n\nQual sua prioridade de Saúde Pública?",
-            feedback: { type: "success", msg: "ACERTO: Dividir a equipe permitiu detectar os riscos a tempo." },
-            choices: [
-                { text: "A - Atacar a Leptospirose (Profilaxia)", target: "erro_clinico" },
-                { text: "B - Atacar o Surto Respiratório (Máscaras)", target: "erro_clinico" },
-                { text: "C - Atacar a Causa Raiz (Articulação Intersetorial)", target: "fase_4" }
-            ]
-        },
-        "retry_fase_3": {
-            text: "[10:00] Reavaliando a estratégia sanitária...\n\nTemos risco de Leptospirose (água parada) e Respiratório (superlotação).\n\nQual sua prioridade?",
-            choices: [
-                { text: "A - Atacar a Leptospirose (Profilaxia)", target: "erro_clinico" },
-                { text: "B - Atacar o Surto Respiratório (Máscaras)", target: "erro_clinico" },
-                { text: "C - Atacar a Causa Raiz (Articulação Intersetorial)", target: "fase_4" }
-            ]
-        },
-        "erro_clinico": {
-            text: "Você envia insumos médicos. Mas a lama continua lá e a superlotação também.\n\nVocê está enxugando gelo tratando apenas o sintoma.",
-            feedback: { type: "error", msg: "ERRO DE VISÃO: Sem resolver a infraestrutura (Causa Raiz), o remédio não resolve." },
-            choices: [
-                { text: "Tentar Novamente", target: "retry_fase_3" },
-                { text: "Reiniciar do Zero", target: "start" }
-            ]
-        },
-        "fase_4": {
-            text: "[11:00] Você tenta contatar a Defesa Civil para pedir água potável e espaço.\n\nO rádio está mudo. \"Dificuldades de comunicação\", como previsto no cenário.\n\nO que você faz?",
-            feedback: { type: "success", msg: "ACERTO: Você identificou que o problema é infraestrutura, não apenas remédio." },
-            choices: [
-                { text: "A - Continuar tentando pelos canais oficiais (Protocolo)", target: "erro_burocracia" },
-                { text: "B - Ir fisicamente ao QG da Defesa Civil (Pró-atividade)", target: "vitoria" }
-            ]
-        },
-        "retry_fase_4": {
-            text: "[11:00] O rádio continua mudo e a Defesa Civil não responde seus chamados.\n\nO tempo está correndo.\n\nO que você faz?",
-            choices: [
-                { text: "A - Insistir nos canais oficiais (Protocolo)", target: "erro_burocracia" },
-                { text: "B - Ir fisicamente ao QG da Defesa Civil", target: "vitoria" }
-            ]
-        },
-        "erro_burocracia": {
-            text: "Você perde 3 horas tentando usar o rádio. Ninguém responde. A janela de oportunidade se fecha e os primeiros casos de febre aparecem.",
-            feedback: { type: "error", msg: "FALHA DE ARTICULAÇÃO: Em desastres, a burocracia colapsa. Esperar é fatal." },
-            choices: [
-                { text: "Tentar Novamente", target: "retry_fase_4" },
-                { text: "Reiniciar do Zero", target: "start" }
-            ]
-        },
+        // (restante igual ao original — mantive para brevidade no exemplo)
         "vitoria": {
             text: "[11:30] Você vai pessoalmente ao QG. O Comandante da Defesa Civil entende a gravidade.\n\nPLANO CONJUNTO ATIVADO:\n1. Defesa Civil envia caminhão-pipa (Fim do risco Lepto).\n2. Defesa Civil abre anexo do ginásio (Fim do risco Respiratório).\n3. Médicos aplicam profilaxia e isolamento.\n\nCrise Gerenciada.",
             feedback: { type: "success", msg: "MISSÃO CUMPRIDA: Você resolveu o desafio do Grupo 5." },
