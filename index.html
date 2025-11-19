@@ -515,7 +515,7 @@
 
         if (shouldPlay && !isFirstInteraction) {
             audioPrologue.play().then(() => {
-                btnPlayPause.innerText = "⏸️ Pausar Narração";
+                btnPlayPause.innerText =;
             }).catch(e => {
                 console.log("Autoplay blocked");
                 btnPlayPause.innerText = "▶️ Tocar Narração";
